@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const archiver = require("archiver");
-const fs = require("fs");
+import archiver from "archiver";
+import fs from "fs";
 
 function zip(dir, outputFilename) {
   return new Promise((resolve, reject) => {
@@ -26,12 +26,11 @@ const LIMIT = 13 * 1024;
 
 (async () => {
   try {
-    const packageSize = await zip("build/bundled", "build/zipped/wor.zip");
+    const zipFile = "build/zipped/thirteen.zip";
+    const packageSize = await zip("build/bundled", zipFile);
+    const percent = ((packageSize / LIMIT) * 100).toFixed(2);
     console.log(
-      `Package: ${packageSize} byte / ${(packageSize
-        ? (packageSize / LIMIT) * 100
-        : 0
-      ).toFixed(2)}%`,
+      `${zipFile} @ ${packageSize} byte / ${percent}% of ${LIMIT} bytes`,
     );
   } catch (error) {
     console.error("zip error", error);

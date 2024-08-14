@@ -2,9 +2,12 @@
 
 set -e
 
-rm -rf build/
+rm -rf build/ .parcel-cache/
 mkdir -p build/zipped build/bundled
 
-npm run build
+echo "# Building..."
+npx parcel build
 
+echo ""
+echo "# Zipping..."
 bin/zip.js

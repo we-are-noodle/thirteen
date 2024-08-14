@@ -1,15 +1,33 @@
 {
   "name": "thirteen",
   "version": "1.0.0",
-  "source": "src/index.html",
-  "scripts": {
-    "start": "parcel serve --port 40001 --no-hmr src/index.html",
-    "build": "parcel build --no-source-maps --dist-dir build/bundled src/index.html"
-  },
   "license": "MIT",
+  "type": "module",
+  "source": "src/index.html",
+  "engines": {
+    "node": "20"
+  },
+  "targets": {
+    "default": {
+      "context": "browser",
+      "distDir": "build/bundled",
+      "sourceMap": false
+    }
+  },
+  "scripts": {
+    "start": "rimraf .parcel-cache/ && parcel serve --port 40001",
+    "lint:eslint": "eslint --max-warnings 0 src/",
+    "lint:prettier": "prettier --check .",
+    "lint": "npm run lint:eslint && npm run lint:prettier"
+  },
   "devDependencies": {
+    "@eslint/js": "^9.9.0",
     "archiver": "^7.0.1",
+    "eslint": "^9.9.0",
+    "globals": "^15.9.0",
     "kontra": "^10.0.0",
-    "parcel": "^2.12.0"
+    "parcel": "^2.12.0",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1"
   }
 }
