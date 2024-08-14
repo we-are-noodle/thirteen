@@ -1,0 +1,13 @@
+{
+  "name": "thirteen",
+  "version": "1.0.0",
+  "source": "src/index.html",
+  "scripts": {
+    "start": "parcel serve --port 40001 --no-hmr src/index.html"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "kontra": "^10.0.0",
+    "parcel": "^2.12.0"
+  }
+}
