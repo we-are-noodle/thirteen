@@ -1,11 +1,8 @@
-import {init, GameLoop, initPointer, initInput} from "kontra";
+import {init, GameLoop} from "kontra";
 import Character from "./Character.js";
 import InputHandler from "./InputHandler.js";
 
 const { canvas } = init();
-
-initPointer();
-initInput();
 
 const dps = new Character({
   x: 100,

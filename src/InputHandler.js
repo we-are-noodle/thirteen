@@ -1,7 +1,10 @@
-import {getPointer, onInput, onKey, pointerPressed} from "kontra";
+import {getPointer, initInput, initPointer, onInput, onKey, pointerPressed} from "kontra";
 
 export default class InputHandler {
   constructor(selected) {
+    initPointer();
+    initInput();
+
     this.selected = selected;
     onInput("down", () => {
       if (pointerPressed("left")) {
