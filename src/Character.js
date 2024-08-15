@@ -1,4 +1,4 @@
-import {angleToTarget, movePoint, SpriteClass} from "kontra";
+import { angleToTarget, movePoint, SpriteClass } from "kontra";
 
 export default class Character extends SpriteClass {
   init(properties) {
@@ -10,7 +10,10 @@ export default class Character extends SpriteClass {
   update() {
     this.advance();
     if (this.target) {
-      const distance = Math.hypot(this.target.x - this.x, this.target.y - this.y);
+      const distance = Math.hypot(
+        this.target.x - this.x,
+        this.target.y - this.y,
+      );
       if (distance > this.speed) {
         const ang = angleToTarget(this, this.target);
         const { x, y } = movePoint(this, ang, this.speed);

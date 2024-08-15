@@ -1,4 +1,11 @@
-import {getPointer, initInput, initPointer, onInput, onKey, pointerPressed} from "kontra";
+import {
+  getPointer,
+  initInput,
+  initPointer,
+  onInput,
+  onKey,
+  pointerPressed,
+} from "kontra";
 
 export default class InputHandler {
   constructor(selected) {

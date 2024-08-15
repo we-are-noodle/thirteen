@@ -1,15 +1,15 @@
-import {init, GameLoop} from "kontra";
+import { init, GameLoop } from "kontra";
 import Character from "./Character.js";
 import InputHandler from "./InputHandler.js";
 
-const { canvas } = init();
+init();
 
 const dps = new Character({
   x: 100,
   y: 80,
   color: "red",
   width: 20,
-  height: 40
+  height: 40,
 });
 
 const tank = new Character({
@@ -17,7 +17,7 @@ const tank = new Character({
   y: 100,
   color: "blue",
   width: 20,
-  height: 40
+  height: 40,
 });
 
 const healer = new Character({
@@ -25,7 +25,7 @@ const healer = new Character({
   y: 300,
   color: "green",
   width: 20,
-  height: 40
+  height: 40,
 });
 
 const inputHandler = new InputHandler(dps);
