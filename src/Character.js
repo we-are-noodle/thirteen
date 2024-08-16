@@ -17,8 +17,8 @@ export default class Character extends SpriteClass {
       if (distance > this.speed) {
         const ang = angleToTarget(this, this.target);
         const { x, y } = movePoint(this, ang, this.speed);
-        this.x = x;
-        this.y = y;
+        this.x = Math.round(x);
+        this.y = Math.round(y);
       } else {
         this.target = null;
       }

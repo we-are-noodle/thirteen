@@ -1,5 +1,8 @@
 import {
   init,
+  initInput,
+  initPointer,
+  getPointer,
   loadImage,
   TileEngine,
   track,
@@ -19,37 +22,8 @@ import InputHandler from "./InputHandler.js";
 
 (async function () {
   init();
-
-  const dps = new Character({
-    x: 80,
-    y: 112,
-    color: "red",
-    width: 16,
-    height: 16,
-  });
-
-  const tank = new Character({
-    x: 112,
-    y: 112,
-    color: "blue",
-    width: 16,
-    height: 16,
-  });
-
-  const healer = new Character({
-    x: 144,
-    y: 112,
-    color: "green",
-    width: 16,
-    height: 16,
-  });
-
-  const inputHandler = new InputHandler(dps);
-  inputHandler.setKeybind("1", dps);
-  inputHandler.setKeybind("2", tank);
-  inputHandler.setKeybind("3", healer);
-
-  const playerCharacters = [dps, tank, healer];
+  initInput();
+  initPointer();
 
   const [, bloodImg] = await Promise.all([
     loadImage(outdoorImg),
@@ -75,10 +49,12 @@ import InputHandler from "./InputHandler.js";
   const effects = [];
   const tileEngine = TileEngine({
     ...outdoorData,
-    onDown(e) {
-      const { x, y } = getMousePosition(this.context.canvas, e);
+    onDown() {
+      const { x, y } = getPointer();
 
-      if (tileEngine.tileAtLayer("outOfBounds", { x, y })) {
+      const tile = tileEngine.tileAtLayer("outOfBounds", { x, y });
+
+      if (tile) {
         return;
       }
 
@@ -96,6 +72,37 @@ import InputHandler from "./InputHandler.js";
 
   track(tileEngine);
 
+  const dps = new Character({
+    x: 80,
+    y: 112,
+    color: "red",
+    width: 16,
+    height: 16,
+  });
+
+  const tank = new Character({
+    x: 112,
+    y: 112,
+    color: "blue",
+    width: 16,
+    height: 16,
+  });
+
+  const healer = new Character({
+    x: 144,
+    y: 112,
+    color: "green",
+    width: 16,
+    height: 16,
+  });
+
+  const inputHandler = new InputHandler(dps, tileEngine);
+  inputHandler.setKeybind("1", dps);
+  inputHandler.setKeybind("2", tank);
+  inputHandler.setKeybind("3", healer);
+
+  const playerCharacters = [dps, tank, healer];
+
   const loop = GameLoop({
     blur: true,
     update: function () {
@@ -104,8 +111,8 @@ import InputHandler from "./InputHandler.js";
     },
     render: function () {
       tileEngine.render();
-      playerCharacters.forEach((c) => c.render());
       effects.forEach((f) => f.render());
+      playerCharacters.forEach((c) => c.render());
     },
   });
 
