@@ -11,11 +11,12 @@ import {
   GameLoop,
 } from "kontra";
 
-import getMousePosition from "./getMousePosition.js";
-
-import outdoorImg from "./assets/imgs/outdoor.png";
+import outdoorImg from "./assets/imgs/forrest.png";
 import bloodSheet from "./assets/imgs/blood.png";
-import outdoorData from "./assets/data/outdoor.json";
+import necromancerSheet from "./assets/imgs/necromancer_sheet.png";
+import mageSheet from "./assets/imgs/mage_sheet.png";
+import swordsmanSheet from "./assets/imgs/swordsman_sheet.png";
+import outdoorData from "./assets/data/forrest.json";
 
 import Character from "./Character.js";
 import InputHandler from "./InputHandler.js";
@@ -25,11 +26,70 @@ import InputHandler from "./InputHandler.js";
   initInput();
   initPointer();
 
-  const [, bloodImg] = await Promise.all([
-    loadImage(outdoorImg),
-    loadImage(bloodSheet),
-  ]);
+  const [, bloodImg, necromancerImg, mageImg, swordsmanImg] = await Promise.all(
+    [
+      loadImage(outdoorImg),
+      loadImage(bloodSheet),
+      loadImage(necromancerSheet),
+      loadImage(mageSheet),
+      loadImage(swordsmanSheet),
+    ],
+  );
   outdoorData.tilesets[0].image = outdoorImg;
+
+  const necromancerSpritesheet = SpriteSheet({
+    image: necromancerImg,
+    frameWidth: 16,
+    frameHeight: 16,
+    spacing: 0,
+    margin: 0,
+    animations: {
+      idle: {
+        frames: [1, 0],
+        frameRate: 1,
+      },
+      walk: {
+        frames: "0..4",
+        frameRate: 5,
+      },
+    },
+  });
+
+  const mageSpritesheet = SpriteSheet({
+    image: mageImg,
+    frameWidth: 16,
+    frameHeight: 16,
+    spacing: 0,
+    margin: 0,
+    animations: {
+      idle: {
+        frames: [1, 0],
+        frameRate: 1.5,
+      },
+      walk: {
+        frames: "0..3",
+        frameRate: 5,
+      },
+    },
+  });
+
+  const swordsmanSpritesheet = SpriteSheet({
+    image: swordsmanImg,
+    frameWidth: 16,
+    frameHeight: 16,
+    spacing: 0,
+    margin: 0,
+    animations: {
+      idle: {
+        frames: [1, 0],
+        frameRate: 2,
+      },
+      walk: {
+        frames: "0..4",
+        frameRate: 5,
+      },
+    },
+  });
 
   const bloodSpritesheet = SpriteSheet({
     image: bloodImg,
@@ -67,6 +127,10 @@ import InputHandler from "./InputHandler.js";
       blood.playAnimation("splat");
 
       effects.push(blood);
+
+      if (effects.length > 10) {
+        effects.shift();
+      }
     },
   });
 
@@ -75,7 +139,7 @@ import InputHandler from "./InputHandler.js";
   const dps = new Character({
     x: 80,
     y: 112,
-    color: "red",
+    animations: necromancerSpritesheet.animations,
     width: 16,
     height: 16,
   });
@@ -83,7 +147,7 @@ import InputHandler from "./InputHandler.js";
   const tank = new Character({
     x: 112,
     y: 112,
-    color: "blue",
+    animations: swordsmanSpritesheet.animations,
     width: 16,
     height: 16,
   });
@@ -91,7 +155,7 @@ import InputHandler from "./InputHandler.js";
   const healer = new Character({
     x: 144,
     y: 112,
-    color: "green",
+    animations: mageSpritesheet.animations,
     width: 16,
     height: 16,
   });
