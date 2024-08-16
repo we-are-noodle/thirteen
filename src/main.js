@@ -9,6 +9,8 @@ import {
   GameLoop,
 } from "kontra";
 
+import getMousePosition from "./getMousePosition.js";
+
 import outdoorImg from "./assets/imgs/outdoor.png";
 import bloodSheet from "./assets/imgs/blood.png";
 import outdoorData from "./assets/data/outdoor.json";
@@ -42,17 +44,24 @@ initPointer();
   const tileEngine = TileEngine({
     ...outdoorData,
     onDown(e) {
-      let { row, col } = this.getPosition(e);
+      const { x, y } = getMousePosition(this.context.canvas, e);
+
+      if (tileEngine.tileAtLayer("outOfBounds", { x, y })) {
+        return;
+      }
+
       const blood = Sprite({
         anchor: { x: 0.5, y: 0.5 },
-        x: col * this.tilewidth + this.tilewidth / 2,
-        y: row * this.tileheight + this.tileheight / 2,
+        x,
+        y,
         animations: bloodSpritesheet.animations,
       });
       blood.playAnimation("splat");
+
       effects.push(blood);
     },
   });
+
   track(tileEngine);
 
   const loop = GameLoop({
