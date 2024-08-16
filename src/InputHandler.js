@@ -16,7 +16,7 @@ export default class InputHandler {
     onInput("down", () => {
       if (pointerPressed("left")) {
         const pointer = getPointer();
-        this.selected.target = { x: pointer.x - 10, y: pointer.y - 20 };
+        this.selected.target = { x: pointer.x, y: pointer.y };
       }
     });
   }

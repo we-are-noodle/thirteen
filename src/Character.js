@@ -5,6 +5,7 @@ export default class Character extends SpriteClass {
     super.init(properties);
     this.target = null;
     this.speed = properties.speed || 2;
+    this.anchor = { x: 0.5, y: 0.5 };
   }
 
   update() {
