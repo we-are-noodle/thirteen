@@ -10,15 +10,7 @@ export default class InputHandler {
           return;
         }
 
-        // const x =
-        //   Math.floor(pointer.x / tileEngine.tilewidth) * tileEngine.tilewidth;
-        // const y =
-        //   Math.floor(pointer.y / tileEngine.tileheight) * tileEngine.tileheight;
-
-        this.selected.target = {
-          x: pointer.x - this.selected.width / 2,
-          y: pointer.y - this.selected.height / 2,
-        };
+        this.selected.target = { x: pointer.x, y: pointer.y };
       }
     });
   }
