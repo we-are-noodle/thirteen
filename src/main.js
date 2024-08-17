@@ -5,18 +5,20 @@ import { initBloodEffects } from "./BloodEffects.js";
 import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
+import { initEnemySwordsman } from "./EnemySwordsman.js";
 
 (async function () {
   init();
   initInput();
   initPointer();
 
-  const [map, bloodEffects, dps, heal, tank] = await Promise.all([
+  const [map, bloodEffects, dps, heal, tank, swordsman] = await Promise.all([
     initMap(),
     initBloodEffects(),
     initCharacterDps(),
     initCharacterHeal(),
     initCharacterTank(),
+    initEnemySwordsman(),
   ]);
 
   let selected = dps;
@@ -40,17 +42,20 @@ import { initCharacterTank } from "./CharacterTank.js";
   });
 
   const playerCharacters = [dps, tank, heal];
+  const enemies = [swordsman];
 
   const loop = GameLoop({
     blur: true,
     update: function () {
       playerCharacters.forEach((c) => c.update());
+      enemies.forEach((c) => c.update());
       effects.forEach((f) => f.update());
     },
     render: function () {
       map.render();
       effects.forEach((f) => f.render());
       playerCharacters.forEach((c) => c.render());
+      enemies.forEach((c) => c.render());
     },
   });
 
