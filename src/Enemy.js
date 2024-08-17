@@ -1,6 +1,6 @@
 import { angleToTarget, movePoint, SpriteClass } from "kontra";
 
-export default class Character extends SpriteClass {
+export default class Enemy extends SpriteClass {
   init(properties) {
     super.init(properties);
 
@@ -28,7 +28,11 @@ export default class Character extends SpriteClass {
         this.x = Math.round(x);
         this.y = Math.round(y);
         this.playAnimation("walk");
-      } else {
+      }
+      // else if (collision detection stuff) {
+      //   this.playAnimation("attack");
+      // }
+      else {
         this.movingTo = null;
         this.playAnimation("idle");
       }

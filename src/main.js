@@ -1,4 +1,4 @@
-import { init, initInput, initPointer, onKey, GameLoop } from "kontra";
+import { init, initInput, initPointer, track, onKey, GameLoop } from "kontra";
 
 import { initMap } from "./Map.js";
 import { initBloodEffects } from "./BloodEffects.js";
@@ -49,13 +49,17 @@ import { initEnemySwordsman } from "./EnemySwordsman.js";
     update: function () {
       playerCharacters.forEach((c) => c.update());
       enemies.forEach((c) => c.update());
-      effects.forEach((f) => f.update());
+      effects.forEach((e) => e.update());
+    },
+    track: function () {
+      enemies.forEach((c) => track(c));
+      enemies.forEach((e) => track(e));
     },
     render: function () {
       map.render();
       effects.forEach((f) => f.render());
       playerCharacters.forEach((c) => c.render());
-      enemies.forEach((c) => c.render());
+      enemies.forEach((e) => e.render());
     },
   });
 

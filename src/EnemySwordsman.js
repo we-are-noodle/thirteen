@@ -17,12 +17,16 @@ async function initEnemySwordsman() {
     margin: 0,
     animations: {
       idle: {
-        frames: [1, 0],
+        frames: [40, 41],
         frameRate: 2,
       },
       walk: {
         frames: "0..4",
         frameRate: 5,
+      },
+      attack: {
+        frames: "20..23",
+        frameRate: 8,
       },
     },
   });
