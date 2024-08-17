@@ -1,4 +1,12 @@
-import { init, initInput, initPointer, onKey, GameLoop } from "kontra";
+import {
+  depthSort,
+  init,
+  initInput,
+  initPointer,
+  onKey,
+  GameLoop,
+  Scene,
+} from "kontra";
 
 import { initMap } from "./Map.js";
 import { initBloodEffects } from "./BloodEffects.js";
@@ -24,7 +32,17 @@ import { initCharacterTank } from "./CharacterTank.js";
   onKey("2", () => (selected = tank));
   onKey("3", () => (selected = heal));
 
-  const effects = [];
+  const scene = Scene({
+    id: "main",
+    objects: [dps, tank, heal],
+    sortFunction: depthSort,
+  });
+
+  const effects = Scene({
+    id: "effects",
+    objects: [],
+  });
+
   map.handleMapClick(({ x, y, outOfBounds }) => {
     if (outOfBounds) {
       return;
@@ -32,25 +50,26 @@ import { initCharacterTank } from "./CharacterTank.js";
 
     selected.moveTo({ x, y });
 
-    effects.push(bloodEffects.createBloodEffect({ x, y }));
-
-    if (effects.length > 10) {
-      effects.shift();
-    }
+    effects.add(bloodEffects.createBloodEffect({ x, y }));
   });
-
-  const playerCharacters = [dps, tank, heal];
 
   const loop = GameLoop({
     blur: true,
-    update: function () {
-      playerCharacters.forEach((c) => c.update());
-      effects.forEach((f) => f.update());
+    update: function (dt) {
+      effects.update(dt);
+      effects.objects.forEach((effect) => {
+        if (effect.isAlive()) {
+          return;
+        }
+
+        effects.remove(effect);
+      });
+      scene.update(dt);
     },
     render: function () {
       map.render();
-      effects.forEach((f) => f.render());
-      playerCharacters.forEach((c) => c.render());
+      effects.render();
+      scene.render();
     },
   });
 
