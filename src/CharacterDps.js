@@ -24,6 +24,14 @@ async function initCharacterDps() {
         frames: "0..4",
         frameRate: 5,
       },
+      attack: {
+        frames: "24..27",
+        frameRate: 4,
+      },
+      profile: {
+        frames: [1],
+        frameRate: 1,
+      },
     },
   });
 
