@@ -1,12 +1,12 @@
 import { getPointer, onInput, onKey, pointerPressed } from "kontra";
 
 export default class InputHandler {
-  constructor(selected, tileEngine) {
+  constructor(selected, map) {
     this.selected = selected;
     onInput("down", () => {
       if (pointerPressed("left")) {
         const pointer = getPointer();
-        if (tileEngine.tileAtLayer("outOfBounds", pointer)) {
+        if (map.isOutOfBounds(pointer)) {
           return;
         }
 
