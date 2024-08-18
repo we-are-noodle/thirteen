@@ -1,49 +1,77 @@
-import { init, GameLoop } from "kontra";
-import Character from "./Character.js";
-import InputHandler from "./InputHandler.js";
+import {
+  depthSort,
+  init,
+  initInput,
+  initPointer,
+  onKey,
+  GameLoop,
+  Scene,
+} from "kontra";
 
-init();
+import { initMap } from "./Map.js";
+import { initBloodEffects } from "./BloodEffects.js";
+import { initCharacterDps } from "./CharacterDps.js";
+import { initCharacterHeal } from "./CharacterHeal.js";
+import { initCharacterTank } from "./CharacterTank.js";
 
-const dps = new Character({
-  x: 100,
-  y: 80,
-  color: "red",
-  width: 20,
-  height: 40,
-});
+(async function () {
+  init();
+  initInput();
+  initPointer();
 
-const tank = new Character({
-  x: 200,
-  y: 100,
-  color: "blue",
-  width: 20,
-  height: 40,
-});
+  const [map, bloodEffects, dps, heal, tank] = await Promise.all([
+    initMap(),
+    initBloodEffects(),
+    initCharacterDps(),
+    initCharacterHeal(),
+    initCharacterTank(),
+  ]);
 
-const healer = new Character({
-  x: 200,
-  y: 300,
-  color: "green",
-  width: 20,
-  height: 40,
-});
+  let selected = dps;
+  onKey("1", () => (selected = dps));
+  onKey("2", () => (selected = tank));
+  onKey("3", () => (selected = heal));
 
-const inputHandler = new InputHandler(dps);
-inputHandler.setKeybind("1", dps);
-inputHandler.setKeybind("2", tank);
-inputHandler.setKeybind("3", healer);
+  const scene = Scene({
+    id: "main",
+    objects: [dps, tank, heal],
+    sortFunction: depthSort,
+  });
 
-const loop = GameLoop({
-  update: function () {
-    tank.update();
-    dps.update();
-    healer.update();
-  },
-  render: function () {
-    tank.render();
-    dps.render();
-    healer.render();
-  },
-});
+  const effects = Scene({
+    id: "effects",
+    objects: [],
+  });
 
-loop.start();
+  map.handleMapClick(({ x, y, outOfBounds }) => {
+    if (outOfBounds) {
+      return;
+    }
+
+    selected.moveTo({ x, y });
+
+    effects.add(bloodEffects.createBloodEffect({ x, y }));
+  });
+
+  const loop = GameLoop({
+    blur: true,
+    update: function (dt) {
+      effects.update(dt);
+      effects.objects.forEach((effect) => {
+        if (effect.isAlive()) {
+          return;
+        }
+
+        effects.remove(effect);
+      });
+      scene.update(dt);
+    },
+    render: function () {
+      map.render();
+      effects.render();
+      scene.render();
+    },
+  });
+
+  loop.start();
+})();
