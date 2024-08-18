@@ -45,7 +45,7 @@ import { initHUD } from "./HUD.js";
 
   const scene = Scene({
     id: "main",
-    objects: [dps, tank, heal],
+    objects: characters,
     sortFunction: depthSort,
   });
 
