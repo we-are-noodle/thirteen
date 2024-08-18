@@ -2,7 +2,7 @@ import { loadImage, SpriteSheet } from "kontra";
 
 import Enemy from "./Enemy.js";
 
-import tankSheet from "./assets/imgs/swordsman_sheet.png";
+import tankSheet from "./assets/imgs/Skeleton-Soldier.png";
 
 class EnemySwordsman extends Enemy {}
 
