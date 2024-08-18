@@ -1,22 +1,36 @@
 import { angleToTarget, movePoint, SpriteClass } from "kontra";
 
+import CharacterSelected from "./CharacterSelected";
+
 export default class Character extends SpriteClass {
   init(properties) {
     super.init(properties);
 
+    this.health = 100;
     this.width = 16;
     this.height = 16;
     this.anchor = { x: 0.5, y: 0.5 };
     this.movingTo = null;
     this.speed = properties.speed || 1;
+    this.isSelected = false;
+
+    this.addChild(new CharacterSelected());
   }
 
   moveTo({ x, y }) {
     this.movingTo = { x, y };
   }
 
+  isAlive() {
+    return this.health > 0;
+  }
+
   update() {
     this.advance();
+    if (Math.random() < 0.01) {
+      this.health -= 10;
+    }
+
     if (this.movingTo) {
       const distance = Math.hypot(
         this.movingTo.x - this.x,

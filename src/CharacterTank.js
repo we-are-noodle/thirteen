@@ -24,6 +24,14 @@ async function initCharacterTank() {
         frames: "0..4",
         frameRate: 5,
       },
+      attack: {
+        frames: "20..23",
+        frameRate: 5,
+      },
+      profile: {
+        frames: [1],
+        frameRate: 1,
+      },
     },
   });
 
