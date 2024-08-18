@@ -25,11 +25,16 @@ export default class Character extends SpriteClass {
     return this.health > 0;
   }
 
+  takeDamage(damage) {
+    console.log(damage);
+    return this.health -= damage;
+  }
+
   update() {
     this.advance();
-    if (Math.random() < 0.01) {
-      this.health -= 10;
-    }
+    // if (Math.random() < 0.01) {
+    //   this.health -= 10;
+    // }
 
     if (this.movingTo) {
       const distance = Math.hypot(
@@ -42,6 +47,8 @@ export default class Character extends SpriteClass {
         this.x = Math.round(x);
         this.y = Math.round(y);
         this.playAnimation("walk");
+      } else if(this.isAlive() == false) {
+        this.playAnimation("dead");
       } else {
         this.movingTo = null;
         this.playAnimation("idle");

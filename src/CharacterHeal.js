@@ -32,6 +32,10 @@ async function initCharacterHeal() {
         frames: [1],
         frameRate: 1,
       },
+      dead: {
+        frames: [50],
+        frameRate: 50,
+      },
     },
   });
 
