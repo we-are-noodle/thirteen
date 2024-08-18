@@ -35,6 +35,8 @@ import { initHUD } from "./HUD.js";
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
 
+  swordsman.target = dps;
+
   let selected;
   const selectCharacter = (index) => () => {
     characters.forEach((c) => (c.isSelected = false));
