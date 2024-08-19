@@ -35,6 +35,10 @@ export default class Character extends SpriteClass {
     // if (Math.random() < 0.01) {
     //   this.health -= 10;
     // }
+    if (!this.isAlive()) {
+      this.playAnimation("dead");
+      return;
+    }
 
     if (this.movingTo) {
       const distance = Math.hypot(
@@ -47,8 +51,6 @@ export default class Character extends SpriteClass {
         this.x = Math.round(x);
         this.y = Math.round(y);
         this.playAnimation("walk");
-      } else if(this.isAlive() == false) {
-        this.playAnimation("dead");
       } else {
         this.movingTo = null;
         this.playAnimation("idle");
