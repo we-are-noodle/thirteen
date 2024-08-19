@@ -26,11 +26,11 @@ async function initEnemySwordsman() {
       },
       attack: {
         frames: "20..23",
-        frameRate: 4,
+        frameRate: 10,
+        loop: false,
       },
       dead: {
-        frames: [5],
-        frameRate: 1,
+        frames: 50
       },
     },
   });
