@@ -25,7 +25,7 @@ async function initCharacterHeal() {
         frameRate: 5,
       },
       attack: {
-        frames: "24..28",
+        frames: "24..30",
         frameRate: 5,
       },
       profile: {
