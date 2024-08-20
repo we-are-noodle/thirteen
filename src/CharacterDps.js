@@ -25,7 +25,7 @@ async function initCharacterDps() {
         frameRate: 5,
       },
       attack: {
-        frames: "24..27",
+        frames: "24..30",
         frameRate: 10,
       },
       profile: {
@@ -33,7 +33,8 @@ async function initCharacterDps() {
         frameRate: 1,
       },
       dead: {
-        frames: 5,
+        frames: [30],
+        frameRate: 1,
       },
     },
   });

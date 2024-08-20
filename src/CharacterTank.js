@@ -33,7 +33,7 @@ async function initCharacterTank() {
         frameRate: 1,
       },
       dead: {
-        frames: [50],
+        frames: [45],
         frameRate: 1,
       },
     },

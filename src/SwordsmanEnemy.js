@@ -1,12 +1,12 @@
-import { loadImage, track, SpriteSheet } from "kontra";
+import { loadImage, SpriteSheet } from "kontra";
 
 import Enemy from "./Enemy.js";
 
-import tankSheet from "./assets/imgs/Skeleton-Soldier.png";
+import tankSheet from "./assets/imgs/swordsman_sheet.png";
 
-class EnemySwordsman extends Enemy {}
+class EnemySwordsman extends Character {}
 
-async function initEnemySwordsman() {
+async function initEnememySwordsman() {
   const tankImg = await loadImage(tankSheet);
 
   const spritesheet = SpriteSheet({
@@ -17,35 +17,21 @@ async function initEnemySwordsman() {
     margin: 0,
     animations: {
       idle: {
-        frames: [40, 41],
+        frames: [1, 0],
         frameRate: 2,
       },
       walk: {
         frames: "0..4",
         frameRate: 5,
       },
-      attack: {
-        frames: "20..23",
-        frameRate: 10,
-        loop: false,
-      },
-      dead: {
-        frames: [45],
-        frameRate: 1,
-      },
     },
-    onDown: function() {
-      let characterTarget = this;
-    }
   });
 
   const swordsman = new EnemySwordsman({
     x: 50,
-    y: 50,
+    y: 112,
     animations: spritesheet.animations,
   });
-
-  // track(swordsman);
 
   return swordsman;
 }

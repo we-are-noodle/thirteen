@@ -4,7 +4,7 @@ export default class Enemy extends SpriteClass {
   init(properties) {
     super.init(properties);
 
-    this.health = 100;
+    this.health = 50;
 
     this.width = 16;
     this.height = 16;
@@ -19,7 +19,7 @@ export default class Enemy extends SpriteClass {
   }
 
   takeDamage(damage) {
-    console.log(damage);
+    console.log(`Enemy took ${damage} damage.`);
     return this.health -= damage;
   }
 
@@ -30,6 +30,8 @@ export default class Enemy extends SpriteClass {
   attackTarget() {
     this.target.takeDamage(this.basicAttack());
     this.playAnimation("attack");
+    console.log("Enemy Attacking!");
+
   }
 
   update() {

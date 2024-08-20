@@ -1,4 +1,4 @@
-import { loadImage, track, SpriteSheet } from "kontra";
+import { loadImage, SpriteSheet } from "kontra";
 
 import Enemy from "./Enemy.js";
 
@@ -26,17 +26,13 @@ async function initEnemySwordsman() {
       },
       attack: {
         frames: "20..23",
-        frameRate: 10,
-        loop: false,
+        frameRate: 4,
       },
       dead: {
-        frames: [45],
+        frames: [5],
         frameRate: 1,
       },
     },
-    onDown: function() {
-      let characterTarget = this;
-    }
   });
 
   const swordsman = new EnemySwordsman({
@@ -44,8 +40,6 @@ async function initEnemySwordsman() {
     y: 50,
     animations: spritesheet.animations,
   });
-
-  // track(swordsman);
 
   return swordsman;
 }

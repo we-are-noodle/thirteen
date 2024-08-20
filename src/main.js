@@ -6,6 +6,7 @@ import {
   onKey,
   GameLoop,
   Scene,
+  track,
 } from "kontra";
 
 import { initMap } from "./Map.js";
@@ -34,8 +35,10 @@ import { initHUD } from "./HUD.js";
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
-
-  swordsman.target = dps;
+  swordsman.target = heal;
+  tank.target = swordsman;
+  heal.target = swordsman;
+  dps.target = swordsman;
 
   let selected;
   const selectCharacter = (index) => () => {
@@ -82,6 +85,9 @@ import { initHUD } from "./HUD.js";
         effects.remove(effect);
       });
       scene.update(dt);
+    },
+    track: function () {
+      track(scene);
     },
     render: function () {
       map.render();
