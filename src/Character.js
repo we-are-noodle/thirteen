@@ -29,8 +29,8 @@ export default class Character extends SpriteClass {
 
   // We might want to also move this to the character classes to see if taking damage differs based on class
   takeDamage(damage) {
-    console.log(`Character took ${damage} damage.`);
-    return this.health -= damage;
+   console.log(`Character took ${damage} damage.`);
+   this.health -= damage;
   }
 
   // Specific attacks will be moven to character class

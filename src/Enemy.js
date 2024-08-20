@@ -1,4 +1,11 @@
-import { angleToTarget, movePoint, collides, SpriteClass, randInt, rand } from "kontra";
+import {
+  angleToTarget,
+  movePoint,
+  collides,
+  SpriteClass,
+  randInt,
+  rand,
+} from "kontra";
 
 export default class Enemy extends SpriteClass {
   init(properties) {
@@ -11,7 +18,9 @@ export default class Enemy extends SpriteClass {
     this.anchor = { x: 0.5, y: 0.5 };
     this.target = null;
     this.speed = properties.speed || 1;
-    this.cooldown = false;
+
+    // setting this to 1 ensures we attack immediately
+    this.timeSinceLastAttack = 1;
   }
 
   isAlive() {
@@ -20,42 +29,45 @@ export default class Enemy extends SpriteClass {
 
   takeDamage(damage) {
     console.log(`Enemy took ${damage} damage.`);
-    return this.health -= damage;
+    this.health -= damage;
   }
 
   basicAttack() {
-    return randInt(1, 10);
+    return randInt(1, 25);
   }
 
   attackTarget() {
     this.target.takeDamage(this.basicAttack());
-    this.playAnimation("attack");
+    if (this.currentAnimation.name !== "attack") {
+      this.playAnimation("attack");
+    }
     console.log("Enemy Attacking!");
-
   }
 
-  update() {
+  update(dt) {
     this.advance();
 
-    // if (!this.isAlive()) {
-    //   this.playAnimation("dead");
-    //   return;
-    // }
+    if (!this.isAlive()) {
+      this.playAnimation("dead");
+      return;
+    }
 
     // to do
     //abstract out collision and attack here
     // set variable state to is attacking
     // handle animations in one loop
 
+    if (this.target && this.target.isAlive() && collides(this, this.target)) {
+      if (this.timeSinceLastAttack >= 1) {
+        this.attackTarget();
+        this.timeSinceLastAttack = 0;
+      }
 
-      if (!this.isAlive()) {
-        this.playAnimation("dead");
-      } else if (collides(this.target, this) && this.cooldown == false && this.target.isAlive()) {
-      this.attackTarget();
-      this.cooldown = true;
-      setTimeout(() => this.cooldown = false, 1000);
-      } else {
+      this.timeSinceLastAttack += dt;
+    } else {
       this.playAnimation("idle");
+      // this makes it so when you move away and back in you get hit immediately
+      this.timeSinceLastAttack = 1;
     }
   }
 }
