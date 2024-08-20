@@ -33,7 +33,7 @@ async function initCharacterDps() {
         frameRate: 1,
       },
       dead: {
-        frames: 5,
+        frames: [35],
       },
     },
   });

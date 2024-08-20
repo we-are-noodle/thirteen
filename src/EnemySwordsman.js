@@ -27,10 +27,9 @@ async function initEnemySwordsman() {
       attack: {
         frames: "20..23",
         frameRate: 10,
-        loop: false,
       },
       dead: {
-        frames: 50
+        frames: 50,
       },
     },
   });

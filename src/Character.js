@@ -27,7 +27,7 @@ export default class Character extends SpriteClass {
 
   takeDamage(damage) {
     console.log(damage);
-    return this.health -= damage;
+    this.health -= damage;
   }
 
   update() {
