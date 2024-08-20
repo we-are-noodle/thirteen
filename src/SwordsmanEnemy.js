@@ -1,12 +1,12 @@
 import { loadImage, SpriteSheet } from "kontra";
 
-import Character from "./Character.js";
+import Enemy from "./Enemy.js";
 
 import tankSheet from "./assets/imgs/swordsman_sheet.png";
 
-class CharacterTank extends Character {}
+class EnemySwordsman extends Character {}
 
-async function initCharacterTank() {
+async function initEnememySwordsman() {
   const tankImg = await loadImage(tankSheet);
 
   const spritesheet = SpriteSheet({
@@ -24,28 +24,16 @@ async function initCharacterTank() {
         frames: "0..4",
         frameRate: 5,
       },
-      attack: {
-        frames: "20..23",
-        frameRate: 5,
-      },
-      profile: {
-        frames: [1],
-        frameRate: 1,
-      },
-      dead: {
-        frames: [45],
-        frameRate: 1,
-      },
     },
   });
 
-  const tank = new CharacterTank({
-    x: 112,
+  const swordsman = new EnemySwordsman({
+    x: 50,
     y: 112,
     animations: spritesheet.animations,
   });
 
-  return tank;
+  return swordsman;
 }
 
-export { initCharacterTank };
+export { initEnemySwordsman };
