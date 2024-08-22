@@ -25,7 +25,7 @@ async function initCharacterDps() {
         frameRate: 5,
       },
       attack: {
-        frames: "24..30",
+        frames: "24..29",
         frameRate: 10,
       },
       profile: {

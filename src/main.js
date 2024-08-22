@@ -3,6 +3,7 @@ import {
   init,
   initInput,
   initPointer,
+  initKeys,
   onKey,
   GameLoop,
   Scene,
@@ -21,6 +22,7 @@ import { initHUD } from "./HUD.js";
   init();
   initInput();
   initPointer();
+  initKeys();
 
   const [map, bloodEffects, dps, heal, tank, hud, swordsman] =
     await Promise.all([
@@ -35,10 +37,11 @@ import { initHUD } from "./HUD.js";
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
-  swordsman.target = heal;
+  swordsman.target = tank;
   tank.target = swordsman;
   heal.target = swordsman;
   dps.target = swordsman;
+  heal.friendlyTarget = tank;
 
   let selected;
   const selectCharacter = (index) => () => {

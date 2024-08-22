@@ -1,4 +1,4 @@
-import { angleToTarget, movePoint, randInt, collides, SpriteClass } from "kontra";
+import { angleToTarget, movePoint, randInt, collides, SpriteClass, keyPressed } from "kontra";
 
 import CharacterSelected from "./CharacterSelected";
 
@@ -12,9 +12,13 @@ export default class Character extends SpriteClass {
     this.anchor = { x: 0.5, y: 0.5 };
     this.movingTo = null;
     this.target = null;
+    this.friendlyTarget = null;
     this.speed = properties.speed || 1;
     this.isSelected = false;
-    this.cooldown = false;
+
+    // setting this to 1 ensures we attack immediately
+    this.timeSinceLastAttack = 1;
+    this.timeSinceLastHeal = 1;
 
     this.addChild(new CharacterSelected());
   }
@@ -33,18 +37,40 @@ export default class Character extends SpriteClass {
    this.health -= damage;
   }
 
+  gainHealth(heal) {
+    this.health += heal;
+  }
+
   // Specific attacks will be moven to character class
   basicAttack() {
-    return randInt(7, 12);
+    return randInt(10, 12);
+  }
+
+  // Abilities
+  // We can move this to the appropriate classes after testing
+
+  breathOfLife() {
+    console.log(this.friendlyTarget.health);
+    if (this.friendlyTarget.health < 80) {
+      this.friendlyTarget.health += 20;
+    } else {
+      this.friendlyTarget.health = 100;
+    }
+    if (this.currentAnimation.name !== "attack") {
+      this.playAnimation("attack");
+    }
+    console.log("Character healed!");
   }
 
   attackTarget() {
     this.target.takeDamage(this.basicAttack());
-    this.playAnimation("attack");
     console.log("Character Attacking!");
+    if (this.currentAnimation.name !== "attack") {
+      this.playAnimation("attack");
+    }
   }
 
-  update() {
+  update(dt) {
     this.advance();
     if (!this.isAlive()) {
       this.playAnimation("dead");
@@ -64,6 +90,14 @@ export default class Character extends SpriteClass {
         this.movingTo.y - this.y,
       );
 
+      if (this.friendlyTarget && this.friendlyTarget.isAlive() && keyPressed('q')) {
+        if (this.timeSinceLastHeal >= 1) {
+          this.breathOfLife();
+          this.timeSinceLastHeal = 0;
+        }
+
+        this.timeSinceLastHeal += dt;
+      }
 
       if (distance > this.speed) {
         const ang = angleToTarget(this, this.movingTo);
@@ -71,13 +105,17 @@ export default class Character extends SpriteClass {
         this.x = Math.round(x);
         this.y = Math.round(y);
         this.playAnimation("walk");
-      } else if (collides(this.target, this) && this.cooldown == false && this.target.isAlive()) {
-      this.attackTarget();
-      this.cooldown = true;
-      setTimeout(() => this.cooldown = false, 1000);
+      } else if (this.target && this.target.isAlive() && collides(this, this.target)) {
+      if (this.timeSinceLastAttack >= 1) {
+        this.attackTarget();
+        this.timeSinceLastAttack = 0;
+      }
+
+      this.timeSinceLastAttack += dt;
       } else {
         this.movingTo = null;
         this.playAnimation("idle");
+        this.timeSinceLastAttack = 1;
       }
     }
   }
