@@ -1,6 +1,7 @@
-import { loadImage, SpriteSheet } from "kontra";
+import { collides, loadImage, SpriteSheet } from "kontra";
 
 import Character from "./Character.js";
+import Ability from "./Ability.js";
 
 import tankSheet from "./assets/imgs/swordsman_sheet.png";
 
@@ -10,21 +11,64 @@ class CharacterTank extends Character {
       ...props,
     });
 
-    this.abilities = [
-      {
+    this.addAbility(
+      new Ability({
         name: "Taunt",
         description: "Force enemies to attack you.",
-        action: () => {
-          if (this.timeSinceLastAbility[0] < 3) {
-            return;
-          }
-          this.timeSinceLastAbility[0] = 0;
-          console.log("Taunt");
-        },
+        action: () => this.taunt(),
         cooldown: 3,
-      },
-    ];
-    this.timeSinceLastAbility = this.abilities.map((a) => a.cooldown);
+      }),
+    );
+
+    this.basicAttack = new Ability({
+      type: "melee",
+      name: "Basic Attack",
+      description: "Deal 1 damage to target.",
+      action: () => this.attack(1),
+      cooldown: 1,
+    });
+  }
+
+  taunt() {
+    if (!this.target?.isAlive()) {
+      return false;
+    }
+
+    console.log("Taunted!");
+    this.target.target = this;
+    this.playAnimation("taunt");
+
+    return true;
+  }
+
+  attack(damage) {
+    if (!this.target?.isAlive() || !collides(this, this.target)) {
+      return false;
+    }
+
+    console.log("Attacking!");
+    this.target.takeDamage(damage);
+    this.playAnimation("attack");
+
+    return true;
+  }
+
+  update(dt) {
+    super.update(dt);
+
+    if (!this.isAlive()) {
+      return;
+    }
+
+    this.basicAttack.update(dt);
+    this.basicAttack.use();
+
+    if (
+      this.currentAnimation.name === "taunt" &&
+      this.currentAnimation.isStopped
+    ) {
+      this.playAnimation("idle");
+    }
   }
 }
 
@@ -48,7 +92,7 @@ async function initCharacterTank() {
       },
       attack: {
         frames: "20..23",
-        frameRate: 5,
+        frameRate: 8,
       },
       profile: {
         frames: [1],
@@ -57,6 +101,11 @@ async function initCharacterTank() {
       dead: {
         frames: [45],
         frameRate: 1,
+      },
+      taunt: {
+        frames: "40..45",
+        frameRate: 5,
+        loop: false,
       },
     },
   });

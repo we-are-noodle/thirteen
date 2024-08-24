@@ -37,7 +37,7 @@ import { initHUD } from "./HUD.js";
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
-  swordsman.target = tank;
+  swordsman.target = dps;
   tank.target = swordsman;
   heal.target = swordsman;
   dps.target = swordsman;
@@ -53,7 +53,7 @@ import { initHUD } from "./HUD.js";
   onKey("1", selectCharacter(0));
   onKey("2", selectCharacter(1));
   onKey("3", selectCharacter(2));
-  onKey("q", () => selected.abilities[0].action());
+  onKey("q", () => selected.abilities[0].use());
 
   const scene = Scene({
     id: "main",

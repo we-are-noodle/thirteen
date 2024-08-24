@@ -53,7 +53,7 @@ class HUD extends GameObjectClass {
       hl.addChild(healthbar);
 
       const abilityIcons = [];
-      character.abilities?.forEach((ability, i) => {
+      character.abilities?.forEach((ability) => {
         const abilityIcon = Sprite({
           x: 36,
           y: 0,
@@ -64,11 +64,9 @@ class HUD extends GameObjectClass {
         hl.addChild(abilityIcon);
 
         const maxWidth = 24;
-        const cd = ability.cooldown;
-        const timeSinceLastAbility = character.timeSinceLastAbility[i];
         const width = Math.max(
           0,
-          ((cd - timeSinceLastAbility) / cd) * maxWidth,
+          ability.percentRemainingCooldown() * maxWidth,
         );
 
         const cooldownBar = Sprite({

@@ -1,17 +1,10 @@
-import {
-  angleToTarget,
-  movePoint,
-  collides,
-  SpriteClass,
-  randInt,
-  rand,
-} from "kontra";
+import { collides, SpriteClass, randInt } from "kontra";
 
 export default class Enemy extends SpriteClass {
   init(properties) {
     super.init(properties);
 
-    this.health = 50;
+    this.health = 5000;
 
     this.width = 16;
     this.height = 16;

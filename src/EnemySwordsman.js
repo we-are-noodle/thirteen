@@ -1,4 +1,4 @@
-import { loadImage, track, SpriteSheet } from "kontra";
+import { loadImage, SpriteSheet } from "kontra";
 
 import Enemy from "./Enemy.js";
 
@@ -33,9 +33,7 @@ async function initEnemySwordsman() {
         frameRate: 1,
       },
     },
-    onDown: function() {
-      let characterTarget = this;
-    }
+    onDown: function () {},
   });
 
   const swordsman = new EnemySwordsman({
