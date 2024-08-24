@@ -53,6 +53,7 @@ import { initHUD } from "./HUD.js";
   onKey("1", selectCharacter(0));
   onKey("2", selectCharacter(1));
   onKey("3", selectCharacter(2));
+  onKey("q", () => selected.abilities[0].action());
 
   const scene = Scene({
     id: "main",

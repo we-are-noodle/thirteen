@@ -25,35 +25,78 @@ class HUD extends GameObjectClass {
     this.context.font = "8px monospace";
 
     this.#characters.forEach((character, i) => {
-      const bg = Sprite({
-        x: i * 40 + 4,
+      const hl = Sprite({
+        x: i * 72 + 4,
         y: 4,
+        width: 34,
+        height: 34,
+        color: character.isSelected ? "yellow" : "black",
+      });
+      const bg = Sprite({
+        x: 1,
+        y: 1,
         width: 32,
         height: 32,
-        color: "rgba(0, 0, 0, .9)",
+        color: "black",
       });
-      bg.render();
+      hl.addChild(bg);
 
-      if (character.isSelected) {
-        this.context.strokeStyle = "yellow";
-        this.context.strokeRect(i * 40 + 4, 4, 32, 32);
-      }
-
-      this.#profiles[i].x = i * 40 + 12;
-      this.#profiles[i].y = 14;
-      this.#profiles[i].render();
-
-      this.context.fillText(`${i + 1}`, i * 40 + 8, 14);
       const health = Math.max(0, character.health);
-      const maxWidth = 28;
+      const maxWidth = 30;
       const healthbar = Sprite({
-        x: i * 40 + 6,
-        y: 30,
+        x: 2,
+        y: 28,
         width: Math.max(1, Math.floor((health / 100) * maxWidth)),
         height: 4,
         color: character.health < 30 ? "red" : "green",
       });
-      healthbar.render();
+      hl.addChild(healthbar);
+
+      const abilityIcons = [];
+      character.abilities?.forEach((ability, i) => {
+        const abilityIcon = Sprite({
+          x: 36,
+          y: 0,
+          width: 24,
+          height: 24,
+          color: "black",
+        });
+        hl.addChild(abilityIcon);
+
+        const maxWidth = 24;
+        const cd = ability.cooldown;
+        const timeSinceLastAbility = character.timeSinceLastAbility[i];
+        const width = Math.max(
+          0,
+          ((cd - timeSinceLastAbility) / cd) * maxWidth,
+        );
+
+        const cooldownBar = Sprite({
+          x: 0,
+          y: 22,
+          width,
+          height: 2,
+          color: "blue",
+        });
+        abilityIcon.addChild(cooldownBar);
+        abilityIcons.push(abilityIcon);
+      });
+
+      hl.render();
+
+      const { x: profileX, y: profileY } = hl.world;
+
+      this.#profiles[i].x = profileX + 9;
+      this.#profiles[i].y = profileY + 9;
+      this.#profiles[i].render();
+
+      this.context.font = "8px monospace";
+      this.context.fillText(`${i + 1}`, hl.x + 3, 14);
+
+      abilityIcons.forEach((icon) => {
+        const { x, y } = icon.world;
+        this.context.fillText("Q", x + 2, y + 8);
+      });
     });
   }
 }

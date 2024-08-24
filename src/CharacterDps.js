@@ -4,7 +4,29 @@ import Character from "./Character.js";
 
 import dpsSheet from "./assets/imgs/necromancer_sheet.png";
 
-class CharacterDps extends Character {}
+class CharacterDps extends Character {
+  init(props) {
+    super.init({
+      ...props,
+    });
+
+    this.abilities = [
+      {
+        name: "Attack",
+        description: "Deal 10-12 damage to target.",
+        action: () => {
+          if (this.timeSinceLastAbility[0] < 5) {
+            return;
+          }
+          this.timeSinceLastAbility[0] = 0;
+          console.log("big dam");
+        },
+        cooldown: 5,
+      },
+    ];
+    this.timeSinceLastAbility = this.abilities.map((a) => a.cooldown);
+  }
+}
 
 async function initCharacterDps() {
   const dpsImg = await loadImage(dpsSheet);

@@ -4,7 +4,29 @@ import Character from "./Character.js";
 
 import tankSheet from "./assets/imgs/swordsman_sheet.png";
 
-class CharacterTank extends Character {}
+class CharacterTank extends Character {
+  init(props) {
+    super.init({
+      ...props,
+    });
+
+    this.abilities = [
+      {
+        name: "Taunt",
+        description: "Force enemies to attack you.",
+        action: () => {
+          if (this.timeSinceLastAbility[0] < 3) {
+            return;
+          }
+          this.timeSinceLastAbility[0] = 0;
+          console.log("Taunt");
+        },
+        cooldown: 3,
+      },
+    ];
+    this.timeSinceLastAbility = this.abilities.map((a) => a.cooldown);
+  }
+}
 
 async function initCharacterTank() {
   const tankImg = await loadImage(tankSheet);

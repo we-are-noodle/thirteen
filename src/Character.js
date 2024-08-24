@@ -1,4 +1,11 @@
-import { angleToTarget, movePoint, randInt, collides, SpriteClass, keyPressed } from "kontra";
+import {
+  angleToTarget,
+  movePoint,
+  randInt,
+  collides,
+  SpriteClass,
+  keyPressed,
+} from "kontra";
 
 import CharacterSelected from "./CharacterSelected";
 
@@ -21,6 +28,9 @@ export default class Character extends SpriteClass {
     this.timeSinceLastHeal = 1;
 
     this.addChild(new CharacterSelected());
+
+    this.abilities = [];
+    this.timeSinceLastAbility = [0];
   }
 
   moveTo({ x, y }) {
@@ -33,8 +43,8 @@ export default class Character extends SpriteClass {
 
   // We might want to also move this to the character classes to see if taking damage differs based on class
   takeDamage(damage) {
-   console.log(`Character took ${damage} damage.`);
-   this.health -= damage;
+    console.log(`Character took ${damage} damage.`);
+    this.health -= damage;
   }
 
   gainHealth(heal) {
@@ -77,11 +87,9 @@ export default class Character extends SpriteClass {
       return;
     }
 
-    if (this.movingTo) {
-      const distance = Math.hypot(
-        this.movingTo.x - this.x,
-        this.movingTo.y - this.y,
-      );
+    this.timeSinceLastAbility = this.timeSinceLastAbility.map((time) => {
+      return time + dt;
+    });
 
     //target
     if (this.movingTo) {
@@ -90,7 +98,11 @@ export default class Character extends SpriteClass {
         this.movingTo.y - this.y,
       );
 
-      if (this.friendlyTarget && this.friendlyTarget.isAlive() && keyPressed('q')) {
+      if (
+        this.friendlyTarget &&
+        this.friendlyTarget.isAlive() &&
+        keyPressed("q")
+      ) {
         if (this.timeSinceLastHeal >= 1) {
           this.breathOfLife();
           this.timeSinceLastHeal = 0;
@@ -105,13 +117,17 @@ export default class Character extends SpriteClass {
         this.x = Math.round(x);
         this.y = Math.round(y);
         this.playAnimation("walk");
-      } else if (this.target && this.target.isAlive() && collides(this, this.target)) {
-      if (this.timeSinceLastAttack >= 1) {
-        this.attackTarget();
-        this.timeSinceLastAttack = 0;
-      }
+      } else if (
+        this.target &&
+        this.target.isAlive() &&
+        collides(this, this.target)
+      ) {
+        if (this.timeSinceLastAttack >= 1) {
+          this.attackTarget();
+          this.timeSinceLastAttack = 0;
+        }
 
-      this.timeSinceLastAttack += dt;
+        this.timeSinceLastAttack += dt;
       } else {
         this.movingTo = null;
         this.playAnimation("idle");
