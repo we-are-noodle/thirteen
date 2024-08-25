@@ -1,10 +1,66 @@
 import { loadImage, SpriteSheet } from "kontra";
 
 import Character from "./Character.js";
+import Ability from "./Ability.js";
 
 import healSheet from "./assets/imgs/mage_sheet.png";
 
-class CharacterHeal extends Character {}
+class CharacterHeal extends Character {
+  init(props) {
+    super.init({
+      ...props,
+    });
+
+    this.addAbility(
+      new Ability({
+        name: "Big Heal",
+        description: "Heal 20 health to target.",
+        action: () => this.heal(20),
+        cooldown: 2,
+      }),
+    );
+
+    this.autoHeal = new Ability({
+      name: "Auto Heal",
+      description: "Heal 3 health every second.",
+      action: () => this.heal(3),
+      cooldown: 1,
+    });
+  }
+
+  heal(amount) {
+    if (!this.friendlyTarget?.isAlive() || this.friendlyTarget.health >= 100) {
+      return false;
+    }
+
+    console.log("Character healed!");
+    this.friendlyTarget.health = Math.min(
+      this.friendlyTarget.health + amount,
+      100,
+    );
+    this.playAnimation("bigHeal");
+
+    return true;
+  }
+
+  update(dt) {
+    super.update(dt);
+
+    if (!this.isAlive()) {
+      return;
+    }
+
+    this.autoHeal.update(dt);
+    this.autoHeal.use();
+
+    if (
+      this.currentAnimation.name === "bigHeal" &&
+      this.currentAnimation.isStopped
+    ) {
+      this.playAnimation("idle");
+    }
+  }
+}
 
 async function initCharacterHeal() {
   const healImg = await loadImage(healSheet);
@@ -27,6 +83,11 @@ async function initCharacterHeal() {
       attack: {
         frames: "24..29",
         frameRate: 5,
+      },
+      bigHeal: {
+        frames: "24..29",
+        frameRate: 5,
+        loop: false,
       },
       profile: {
         frames: [1],
