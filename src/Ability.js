@@ -27,6 +27,8 @@ export default class Ability {
     } else {
       return damage;
     }
+    // below can be the final version, I just wanted to have it console log
+    // for the time being.
     // return randInt(1,100) <= probability ? damage * amplification : damage;
   }
 
