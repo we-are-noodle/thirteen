@@ -27,6 +27,10 @@ class CharacterTank extends Character {
       action: () => this.attack(1),
       cooldown: 1,
     });
+
+    // make sure you are utitlizing super in the proper way here.
+    this.armor = 150;
+    this.dexterity = 50;
   }
 
   taunt() {
@@ -54,6 +58,11 @@ class CharacterTank extends Character {
     this.playAnimation("attack");
 
     return true;
+  }
+
+  takeDamage(damage) {
+    console.log(`Character took ${damage} damage.`);
+    this.health -= damage;
   }
 
   update(dt) {
