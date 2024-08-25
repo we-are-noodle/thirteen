@@ -1,3 +1,5 @@
+import { randInt } from "kontra";
+
 export default class Ability {
   #elapsedTime;
 
@@ -16,6 +18,16 @@ export default class Ability {
 
   isMelee() {
     return this.type === "melee";
+  }
+
+  criticalHit(probability, amplification, damage){
+    if (randInt(1,100) <= probability) {
+      // console.log('Critical Hit!')
+      return damage * amplification;
+    } else {
+      return damage;
+    }
+    // return randInt(1,100) <= probability ? damage * amplification : damage;
   }
 
   canUse() {
