@@ -24,23 +24,30 @@ import { initHUD } from "./HUD.js";
   initPointer();
   initKeys();
 
-  const [map, bloodEffects, dps, heal, tank, hud, swordsman] =
-    await Promise.all([
-      initMap(),
-      initBloodEffects(),
-      initCharacterDps(),
-      initCharacterHeal(),
-      initCharacterTank(),
-      initHUD(),
-      initEnemySwordsman(),
-    ]);
+  // disable right click context menu
+  document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+  const [map, bloodEffects, dps, heal, tank, hud, enemies] = await Promise.all([
+    initMap(),
+    initBloodEffects(),
+    initCharacterDps(),
+    initCharacterHeal(),
+    initCharacterTank(),
+    initHUD(),
+    initEnemySwordsman(),
+  ]);
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
-  swordsman.target = dps;
-  tank.target = swordsman;
-  heal.target = swordsman;
-  dps.target = swordsman;
+
+  // set some default targets
+  enemies.forEach((enemy) => {
+    enemy.target = dps;
+  });
+  tank.target = enemies[0];
+  dps.target = enemies[0];
+
+  heal.target = enemies[0];
   heal.friendlyTarget = tank;
 
   let selected;
@@ -57,7 +64,7 @@ import { initHUD } from "./HUD.js";
 
   const scene = Scene({
     id: "main",
-    objects: [...characters, swordsman],
+    objects: [...characters, ...enemies],
     sortFunction: depthSort,
   });
 
@@ -78,6 +85,7 @@ import { initHUD } from "./HUD.js";
 
   const loop = GameLoop({
     blur: true,
+    fps: 60,
     update: function (dt) {
       hud.update();
       effects.update(dt);

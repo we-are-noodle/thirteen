@@ -14,7 +14,10 @@ class Map {
     mapData.tilesets[0].image = await loadImage(mapImg);
     this.tileEngine = TileEngine({
       ...mapData,
-      onDown: () => this.#onDownHandler(),
+      onDown: (e) => {
+        e.preventDefault();
+        this.#onDownHandler();
+      },
     });
     track(this.tileEngine);
   }
