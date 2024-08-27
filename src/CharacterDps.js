@@ -26,6 +26,9 @@ class CharacterDps extends Character {
       action: () => this.attack(3),
       cooldown: 2,
     });
+
+    this.armor = 8;
+    this.dexterity = 8;
   }
 
   fireball() {

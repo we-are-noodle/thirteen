@@ -58,7 +58,6 @@ export default class Character extends SpriteClass {
     // return randInt(1,100) <= this.armor ? true : false;
   }
 
-  // We might want to also move this to the character classes to see if taking damage differs based on class
   takeDamage(damage) {
     // do we want the percentages to aggregate like below?
     if (this.blockAttack() || this.dodgeAttack()) {

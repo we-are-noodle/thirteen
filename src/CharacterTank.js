@@ -29,8 +29,8 @@ class CharacterTank extends Character {
     });
 
     // make sure you are utitlizing super in the proper way here.
-    this.armor = 150;
-    this.dexterity = 50;
+    this.armor = 5;
+    this.dexterity = 5;
   }
 
   taunt() {

@@ -2,15 +2,24 @@ import { loadImage, SpriteSheet } from "kontra";
 
 import Enemy from "./Enemy.js";
 
-import tankSheet from "./assets/imgs/Skeleton-Soldier.png";
+import skeletonSheet from "./assets/imgs/Skeleton-Soldier.png";
 
-class EnemySwordsman extends Enemy {}
+class EnemySwordsman extends Enemy {
+  init(props) {
+    super.init({
+      ...props,
+    });
+
+    this.armor = 10;
+    this.dexterity = 10;
+  }
+}
 
 async function initEnemySwordsman() {
-  const tankImg = await loadImage(tankSheet);
+  const skeletonImg = await loadImage(skeletonSheet);
 
   const spritesheet = SpriteSheet({
-    image: tankImg,
+    image: skeletonImg,
     frameWidth: 16,
     frameHeight: 16,
     spacing: 0,
