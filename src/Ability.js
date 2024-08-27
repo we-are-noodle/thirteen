@@ -44,6 +44,10 @@ export default class Ability {
     return (this.cooldown - this.#elapsedTime) / this.cooldown;
   }
 
+  isReady() {
+    return this.cooldown - this.#elapsedTime <= 0;
+  }
+
   use() {
     if (!this.canUse()) {
       return;

@@ -6,7 +6,8 @@ export default class Character extends SpriteClass {
   init(properties) {
     super.init(properties);
 
-    this.health = 100;
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
     this.dexterity = null;
     this.armor = null;
     this.width = 16;
@@ -36,19 +37,19 @@ export default class Character extends SpriteClass {
   }
 
   dodgeAttack() {
-    if (randInt(1,100) <= this.dexterity) {
-      console.log('Character dodged attack!');
+    if (randInt(1, 100) <= this.dexterity) {
+      console.log("Character dodged attack!");
       return true;
     }
-    console.log(this.dexterity)
+    console.log(this.dexterity);
     return false;
     // when we want to remove console logs, we can refactor to the following:
     // return randInt(1,100) <= this.dexterity ? true : false;
   }
 
   blockAttack() {
-    if (randInt(1,100) <= this.armor) {
-      console.log('Character blocked attack!');
+    if (randInt(1, 100) <= this.armor) {
+      console.log("Character blocked attack!");
       return true;
     }
     console.log(this.armor);
@@ -61,7 +62,7 @@ export default class Character extends SpriteClass {
   takeDamage(damage) {
     // do we want the percentages to aggregate like below?
     if (this.blockAttack() || this.dodgeAttack()) {
-     return;
+      return;
     }
     console.log(`Character took ${damage} damage.`);
     this.health -= damage;
