@@ -60,11 +60,6 @@ class CharacterTank extends Character {
     return true;
   }
 
-  takeDamage(damage) {
-    console.log(`Character took ${damage} damage.`);
-    this.health -= damage;
-  }
-
   update(dt) {
     super.update(dt);
 
