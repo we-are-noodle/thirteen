@@ -1,5 +1,7 @@
 import { GameObjectClass, Sprite } from "kontra";
 
+import HealthBar from "./HealthBar";
+
 class HUD extends GameObjectClass {
   #characters;
   #profiles;
@@ -25,35 +27,75 @@ class HUD extends GameObjectClass {
     this.context.font = "8px monospace";
 
     this.#characters.forEach((character, i) => {
-      const bg = Sprite({
-        x: i * 40 + 4,
+      const hl = Sprite({
+        x: i * 72 + 4,
         y: 4,
+        width: 34,
+        height: 34,
+        color: character.isSelected ? "#FFE629" : "black",
+      });
+      const bg = Sprite({
+        x: 1,
+        y: 1,
         width: 32,
         height: 32,
-        color: "rgba(0, 0, 0, .9)",
+        color: "black",
       });
-      bg.render();
+      hl.addChild(bg);
 
-      if (character.isSelected) {
-        this.context.strokeStyle = "yellow";
-        this.context.strokeRect(i * 40 + 4, 4, 32, 32);
-      }
+      hl.addChild(
+        new HealthBar({
+          combatant: character,
+          maxWidth: 30,
+          height: 4,
+          x: 2,
+          y: 28,
+        }),
+      );
 
-      this.#profiles[i].x = i * 40 + 12;
-      this.#profiles[i].y = 14;
+      const abilityIcons = [];
+      character.abilities?.forEach((ability) => {
+        const abilityIcon = Sprite({
+          x: 36,
+          y: 0,
+          width: 24,
+          height: 24,
+          color: ability.isReady() ? "black" : `rgba(0,0,0,.7)`,
+        });
+        hl.addChild(abilityIcon);
+
+        const maxWidth = 24;
+        const width = Math.max(
+          0,
+          ability.percentRemainingCooldown() * maxWidth,
+        );
+
+        const cooldownBar = Sprite({
+          x: 0,
+          y: 20,
+          width,
+          height: 4,
+          color: "white",
+        });
+        abilityIcon.addChild(cooldownBar);
+        abilityIcons.push(abilityIcon);
+      });
+
+      hl.render();
+
+      const { x: profileX, y: profileY } = hl.world;
+
+      this.#profiles[i].x = profileX + 9;
+      this.#profiles[i].y = profileY + 9;
       this.#profiles[i].render();
 
-      this.context.fillText(`${i + 1}`, i * 40 + 8, 14);
-      const health = Math.max(0, character.health);
-      const maxWidth = 28;
-      const healthbar = Sprite({
-        x: i * 40 + 6,
-        y: 30,
-        width: Math.max(1, Math.floor((health / 100) * maxWidth)),
-        height: 4,
-        color: character.health < 30 ? "red" : "green",
+      this.context.font = "8px monospace";
+      this.context.fillText(`${i + 1}`, hl.x + 3, 14);
+
+      abilityIcons.forEach((icon) => {
+        const { x, y } = icon.world;
+        this.context.fillText("Q", x + 2, y + 8);
       });
-      healthbar.render();
     });
   }
 }

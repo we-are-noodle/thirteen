@@ -3,9 +3,11 @@ import {
   init,
   initInput,
   initPointer,
+  initKeys,
   onKey,
   GameLoop,
   Scene,
+  track,
 } from "kontra";
 
 import { initMap } from "./Map.js";
@@ -13,24 +15,40 @@ import { initBloodEffects } from "./BloodEffects.js";
 import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
+import { initEnemySwordsman } from "./EnemySwordsman.js";
 import { initHUD } from "./HUD.js";
 
 (async function () {
   init();
   initInput();
   initPointer();
+  initKeys();
 
-  const [map, bloodEffects, dps, heal, tank, hud] = await Promise.all([
+  // disable right click context menu
+  document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+  const [map, bloodEffects, dps, heal, tank, hud, enemies] = await Promise.all([
     initMap(),
     initBloodEffects(),
     initCharacterDps(),
     initCharacterHeal(),
     initCharacterTank(),
     initHUD(),
+    initEnemySwordsman(),
   ]);
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
+
+  // set some default targets
+  enemies.forEach((enemy) => {
+    enemy.target = dps;
+  });
+  tank.target = enemies[0];
+  dps.target = enemies[0];
+
+  heal.target = enemies[0];
+  heal.friendlyTarget = tank;
 
   let selected;
   const selectCharacter = (index) => () => {
@@ -42,10 +60,11 @@ import { initHUD } from "./HUD.js";
   onKey("1", selectCharacter(0));
   onKey("2", selectCharacter(1));
   onKey("3", selectCharacter(2));
+  onKey("q", () => selected.abilities[0].use());
 
   const scene = Scene({
     id: "main",
-    objects: [dps, tank, heal],
+    objects: [...characters, ...enemies],
     sortFunction: depthSort,
   });
 
@@ -66,6 +85,7 @@ import { initHUD } from "./HUD.js";
 
   const loop = GameLoop({
     blur: true,
+    fps: 60,
     update: function (dt) {
       hud.update();
       effects.update(dt);
@@ -77,6 +97,9 @@ import { initHUD } from "./HUD.js";
         effects.remove(effect);
       });
       scene.update(dt);
+    },
+    track: function () {
+      track(scene);
     },
     render: function () {
       map.render();
