@@ -46,7 +46,6 @@ class CharacterTank extends Character {
   }
 
   attack(damage) {
-
     damage = this.basicAttack.criticalHit(30, 6, damage);
 
     if (!this.target?.isAlive() || !collides(this, this.target)) {

@@ -20,8 +20,8 @@ export default class Ability {
     return this.type === "melee";
   }
 
-  criticalHit(probability, amplification, damage){
-    if (randInt(1,100) <= probability) {
+  criticalHit(probability, amplification, damage) {
+    if (randInt(1, 100) <= probability) {
       // console.log('Critical Hit!')
       return damage * amplification;
     } else {

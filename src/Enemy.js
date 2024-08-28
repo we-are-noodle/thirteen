@@ -26,19 +26,19 @@ export default class Enemy extends SpriteClass {
   }
 
   dodgeAttack() {
-    if (randInt(1,100) <= this.dexterity) {
-      console.log('Enemy dodged attack!');
+    if (randInt(1, 100) <= this.dexterity) {
+      console.log("Enemy dodged attack!");
       return true;
     }
-    console.log(this.dexterity)
+    console.log(this.dexterity);
     return false;
     // when we want to remove console logs, we can refactor to the following:
     // return randInt(1,100) <= this.dexterity ? true : false;
   }
 
   blockAttack() {
-    if (randInt(1,100) <= this.armor) {
-      console.log('Enemy blocked attack!');
+    if (randInt(1, 100) <= this.armor) {
+      console.log("Enemy blocked attack!");
       return true;
     }
     console.log(this.armor);
@@ -50,7 +50,7 @@ export default class Enemy extends SpriteClass {
   takeDamage(damage) {
     // do we want the percentages to aggregate like below?
     if (this.blockAttack() || this.dodgeAttack()) {
-     return;
+      return;
     }
     console.log(`Enemy took ${damage} damage.`);
     this.health -= damage;
