@@ -15,8 +15,9 @@ import { initBloodEffects } from "./BloodEffects.js";
 import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
-import { initEnemySwordsman } from "./EnemySwordsman.js";
+// import { initEnemySwordsman } from "./EnemySwordsman.js";
 import { initHUD } from "./HUD.js";
+import Spawner from "./EnemySpawner.js";
 
 (async function () {
   init();
@@ -27,27 +28,30 @@ import { initHUD } from "./HUD.js";
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, bloodEffects, dps, heal, tank, hud, enemies] = await Promise.all([
+  const [map, bloodEffects, dps, heal, tank, hud] = await Promise.all([
     initMap(),
     initBloodEffects(),
     initCharacterDps(),
     initCharacterHeal(),
     initCharacterTank(),
     initHUD(),
-    initEnemySwordsman(),
   ]);
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
 
   // set some default targets
-  enemies.forEach((enemy) => {
-    enemy.target = dps;
-  });
-  tank.target = enemies[0];
-  dps.target = enemies[0];
-
-  heal.target = enemies[0];
+  // enemies.forEach((enemy) => {
+  //   enemy.target = dps;
+  // });
+  // tank.target = enemies[0];
+  // dps.target = enemies[0];
+  // heal.target = enemies[0];
+  // const spawner = new Spawner(10, swordsman);
+  // swordsman.target = dps;
+  // tank.target = swordsman;
+  // heal.target = swordsman;
+  // dps.target = swordsman;
   heal.friendlyTarget = tank;
 
   let selected;
@@ -64,9 +68,11 @@ import { initHUD } from "./HUD.js";
 
   const scene = Scene({
     id: "main",
-    objects: [...characters, ...enemies],
+    objects: [...characters],
     sortFunction: depthSort,
   });
+
+  const spawner = new Spawner(5, scene, characters);
 
   const effects = Scene({
     id: "effects",
@@ -97,6 +103,7 @@ import { initHUD } from "./HUD.js";
         effects.remove(effect);
       });
       scene.update(dt);
+      spawner.update(dt);
     },
     track: function () {
       track(scene);

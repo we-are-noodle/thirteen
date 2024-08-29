@@ -1,6 +1,6 @@
-import { collides, SpriteClass, randInt } from "kontra";
-
+import {angleToTarget, collides, movePoint, randInt, SpriteClass} from "kontra";
 import HealthBar from "./HealthBar";
+
 
 export default class Enemy extends SpriteClass {
   init(properties) {
@@ -79,35 +79,43 @@ export default class Enemy extends SpriteClass {
     }
 
     // move back and forth
-    if (this.x < randInt(90, 100)) {
-      this.dx = this.speed;
-    } else if (this.x > randInt(180, 200)) {
-      this.dx -= this.speed;
-    }
-
-    // move up and down
-    if (this.y < 100) {
-      this.dy = this.speed;
-    } else if (this.y > 150) {
-      this.dy -= this.speed;
-    }
+    // if (this.x < randInt(90, 100)) {
+    //   this.dx = this.speed;
+    // } else if (this.x > randInt(180, 200)) {
+    //   this.dx -= this.speed;
+    // }
+    //
+    // // move up and down
+    // if (this.y < 100) {
+    //   this.dy = this.speed;
+    // } else if (this.y > 150) {
+    //   this.dy -= this.speed;
+    // }
 
     // to do
     //abstract out collision and attack here
     // set variable state to is attacking
     // handle animations in one loop
 
-    if (this.target && this.target.isAlive() && collides(this, this.target)) {
-      if (this.timeSinceLastAttack >= 1) {
-        this.attackTarget();
-        this.timeSinceLastAttack = 0;
-      }
+    if (this.target) {
+      if (!collides(this, this.target)) {
+        const ang = angleToTarget(this, this.target);
+        const { x, y } = movePoint(this, ang, this.speed);
+        this.x = x;
+        this.y = y;
+        this.playAnimation("walk");
+      } else if (this.target.isAlive()) {
+        if (this.timeSinceLastAttack >= 1) {
+          this.attackTarget();
+          this.timeSinceLastAttack = 0;
+        }
 
-      this.timeSinceLastAttack += dt;
-    } else {
-      this.playAnimation("idle");
-      // this makes it so when you move away and back in you get hit immediately
-      this.timeSinceLastAttack = 1;
+        this.timeSinceLastAttack += dt;
+      } else {
+          this.playAnimation("idle");
+          // this makes it so when you move away and back in you get hit immediately
+          this.timeSinceLastAttack = 1;
+      }
     }
   }
 
