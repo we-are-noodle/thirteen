@@ -1,6 +1,7 @@
 import { angleToTarget, movePoint, randInt, SpriteClass } from "kontra";
 
 import CharacterSelected from "./CharacterSelected";
+import {getDistance} from "./utils.js";
 
 export default class Character extends SpriteClass {
   init(properties) {
@@ -22,6 +23,11 @@ export default class Character extends SpriteClass {
     this.addChild(new CharacterSelected());
 
     this.abilities = [];
+    this.enemies = [];
+  }
+
+  setEnemeies(enemies) {
+    this.enemies = enemies;
   }
 
   addAbility(ability) {
@@ -77,6 +83,19 @@ export default class Character extends SpriteClass {
     if (!this.isAlive()) {
       this.playAnimation("dead");
       return;
+    }
+
+    // Temporary logic to target the nearest enemy
+    if (!this.target?.isAlive() && this.enemies.length > 0) {
+      this.enemies.forEach((enemy) => {
+        if (!this.target) {
+          this.target = enemy;
+        }
+
+        if (enemy.isAlive() && getDistance(this, enemy) < getDistance(this, this.target)) {
+          this.target = enemy;
+        }
+      })
     }
 
     // abilities need delta time to properly track cooldowns

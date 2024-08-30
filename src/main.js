@@ -15,9 +15,9 @@ import { initBloodEffects } from "./BloodEffects.js";
 import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
-// import { initEnemySwordsman } from "./EnemySwordsman.js";
 import { initHUD } from "./HUD.js";
 import Spawner from "./EnemySpawner.js";
+import Enemy from "./Enemy.js";
 
 (async function () {
   init();
@@ -72,7 +72,8 @@ import Spawner from "./EnemySpawner.js";
     sortFunction: depthSort,
   });
 
-  const spawner = new Spawner(5, scene, characters);
+  const spawner = new Spawner(5, scene);
+  spawner.start = true;
 
   const effects = Scene({
     id: "effects",
@@ -104,6 +105,12 @@ import Spawner from "./EnemySpawner.js";
       });
       scene.update(dt);
       spawner.update(dt);
+      const enemies = scene.objects.filter((o) => o instanceof Enemy);
+      characters.forEach((c) => {
+        c.setEnemeies(enemies);
+      });
+      scene.remove(enemies.filter((e) => e.isRemovable()));
+      spawner.start = enemies.length < 2;
     },
     track: function () {
       track(scene);
