@@ -1,11 +1,11 @@
-import { collides, loadImage, SpriteSheet } from "kontra";
+import { loadImage, SpriteSheet, randInt } from "kontra";
 
-import Character from "./Character.js";
+import Projectile from "./Character.js";
 import Ability from "./Ability.js";
 
-import tankSheet from "./assets/imgs/swordsman_sheet.png";
+import dpsSheet from "./assets/imgs/blood.png";
 
-class CharacterTank extends Character {
+class Fireball extends Projectile {
   init(props) {
     super.init({
       ...props,
@@ -13,41 +13,39 @@ class CharacterTank extends Character {
 
     this.addAbility(
       new Ability({
-        name: "Taunt",
-        description: "Force enemies to attack you.",
-        action: () => this.taunt(),
-        cooldown: 3,
+        name: "Attack",
+        description: "Deal 10-12 damage to target.",
+        action: () => this.fireball(),
+        cooldown: 5,
       }),
     );
 
     this.basicAttack = new Ability({
-      type: "melee",
       name: "Basic Attack",
-      description: "Deal 1 damage to target.",
-      action: () => this.attack(1),
-      cooldown: 1,
+      description: "Deal 3 damage to target.",
+      action: () => this.attack(3),
+      cooldown: 2,
     });
 
-    this.armor = 5;
-    this.dexterity = 5;
+    this.armor = 8;
+    this.dexterity = 8;
   }
 
-  taunt() {
+  fireball() {
     if (!this.target?.isAlive()) {
       return false;
     }
 
-    console.log("Taunted!");
-    this.target.target = this;
-    this.playAnimation("taunt");
+    console.log("Send fireball!");
+    const dmg = randInt(10, 12);
+    this.target.takeDamage(dmg);
+    this.playAnimation("fireball");
 
     return true;
   }
 
   attack(damage) {
-    damage = this.basicAttack.criticalHit(30, 6, damage);
-
-    if (!this.target?.isAlive() || !collides(this, this.target)) {
+    if (!this.target?.isAlive()) {
       return false;
     }
 
@@ -69,7 +67,7 @@ class CharacterTank extends Character {
     this.basicAttack.use();
 
     if (
-      this.currentAnimation.name === "taunt" &&
+      ["attack", "fireball"].includes(this.currentAnimation.name) &&
       this.currentAnimation.isStopped
     ) {
       this.playAnimation("idle");
@@ -77,11 +75,11 @@ class CharacterTank extends Character {
   }
 }
 
-async function initCharacterTank() {
-  const tankImg = await loadImage(tankSheet);
+async function initFireball() {
+  const dpsImg = await loadImage(dpsSheet);
 
   const spritesheet = SpriteSheet({
-    image: tankImg,
+    image: dpsImg,
     frameWidth: 16,
     frameHeight: 16,
     spacing: 0,
@@ -89,39 +87,40 @@ async function initCharacterTank() {
     animations: {
       idle: {
         frames: [1, 0],
-        frameRate: 2,
+        frameRate: 1,
       },
       walk: {
         frames: "0..4",
         frameRate: 5,
       },
       attack: {
-        frames: "20..23",
-        frameRate: 8,
+        frames: ["24..29", 0, 1],
+        frameRate: 5,
+        loop: false,
       },
       profile: {
         frames: [1],
         frameRate: 1,
       },
       dead: {
-        frames: [45],
+        frames: [30],
         frameRate: 1,
       },
-      taunt: {
-        frames: "40..45",
-        frameRate: 5,
+      fireball: {
+        frames: "24..29",
+        frameRate: 10,
         loop: false,
       },
     },
   });
 
-  const tank = new CharacterTank({
-    x: 112,
+  const fireball = new Fireball({
+    x: 80,
     y: 112,
     animations: spritesheet.animations,
   });
 
-  return tank;
+  return fireball;
 }
 
-export { initCharacterTank };
+export { initFireball };
