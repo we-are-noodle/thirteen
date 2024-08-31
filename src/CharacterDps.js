@@ -40,6 +40,8 @@ class CharacterDps extends Character {
     const dmg = randInt(10, 12);
     this.target.takeDamage(dmg);
     this.playAnimation("fireball");
+    // instantiate new fireball
+    // note that it will need to get rendered.
 
     return true;
   }

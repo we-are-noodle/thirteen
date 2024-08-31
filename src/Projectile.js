@@ -1,5 +1,4 @@
-import { angleToTarget, movePoint, randInt, SpriteClass } from "kontra";
-
+import {angleToTarget, collides, movePoint, SpriteClass} from "kontra";
 
 export default class Projectile extends SpriteClass {
   init(properties) {
@@ -8,11 +7,9 @@ export default class Projectile extends SpriteClass {
     this.width = 16;
     this.height = 16;
     this.anchor = { x: 0.5, y: 0.5 };
-    this.movingTo = null;
     this.target = null;
-    this.friendlyTarget = null;
+    this.caster = null;
     this.speed = properties.speed || 1;
-    this.isSelected = false;
 
     // Will we need to add additional functions from child?
     this.abilities = [];
@@ -24,12 +21,6 @@ export default class Projectile extends SpriteClass {
     this.abilities.push(ability);
   }
 
-  moveTo({ x, y }) {
-    this.movingTo = { x, y };
-  }
-
-  // if projectile location is equal to target location or collision
-
 
   update(dt) {
     this.advance();
@@ -37,25 +28,20 @@ export default class Projectile extends SpriteClass {
     // abilities need delta time to properly track cooldowns
     this.abilities.forEach((a) => a.update(dt));
 
-    //target
-    if (this.movingTo) {
-      const distance = Math.hypot(
-        this.movingTo.x - this.x,
-        this.movingTo.y - this.y,
-      );
 
-      if (distance > this.speed) {
-        const ang = angleToTarget(this, this.movingTo);
+    if (this.target) {
+      if (!collides(this, this.target)) {
+        const ang = angleToTarget(this, this.target);
         const { x, y } = movePoint(this, ang, this.speed);
-        this.x = Math.round(x);
-        this.y = Math.round(y);
+        this.x = x;
+        this.y = y;
         this.playAnimation("seek");
-      } else {
-        this.movingTo = null;
+      } else if(collides(this, this.target)) {
+        if (this.currentAnimation.name !== "explode") {
+          this.playAnimation("explode");
+        }
 
-        // if projectile location is equal to target location or collision
-        this.playAnimation("explode");
-        // should return after explosion
+        return;
       }
     }
   }
