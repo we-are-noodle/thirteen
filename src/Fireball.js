@@ -9,16 +9,18 @@ class Fireball extends Projectile {
   init(props) {
     super.init({
       ...props,
+      animations: Fireball.spritesheet.animations,
     });
 
     // how do we pass you in?
-    this.caster = ;
-    this.target = ;
+    // this.caster = ;
+    // this.target = ;
   }
 
 
   update(dt) {
     super.update(dt);
+    // console.log("abeek");
   }
 }
 
@@ -33,9 +35,9 @@ async function initFireball() {
     margin: 0,
     animations: {
       seek: {
-        frames: "0..4",
+        frames: [5],
         frameRate: 30,
-        loop: false,
+        loop: true,
       },
       explode: {
         frames: "0..29",
@@ -46,18 +48,9 @@ async function initFireball() {
   });
 
   // We will have to spawn the fireball at the location of the caster.
-  //
+  Fireball.spritesheet = spritesheet;
 
-  const fireball = new Fireball({
-    // we will have to use caster location here.
-    x: this.caster.x,
-    y: this.caster.y,
-    target: this.target,
-    caster: this.caster,
-    animations: spritesheet.animations,
-  });
-
-  return fireball;
 }
 
+export default Fireball;
 export { initFireball };

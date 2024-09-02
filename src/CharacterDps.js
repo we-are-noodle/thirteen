@@ -1,6 +1,7 @@
 import { loadImage, SpriteSheet, randInt } from "kontra";
 
 import Character from "./Character.js";
+import Fireball from "./Fireball.js";
 import Ability from "./Ability.js";
 
 import dpsSheet from "./assets/imgs/necromancer_sheet.png";
@@ -15,7 +16,7 @@ class CharacterDps extends Character {
       new Ability({
         name: "Attack",
         description: "Deal 10-12 damage to target.",
-        action: () => this.fireball(),
+        action: (m) => this.fireball(m),
         cooldown: 5,
       }),
     );
@@ -31,17 +32,28 @@ class CharacterDps extends Character {
     this.dexterity = 8;
   }
 
-  fireball() {
+  fireball(m) {
     if (!this.target?.isAlive()) {
       return false;
     }
 
     console.log("Send fireball!");
-    const dmg = randInt(10, 12);
-    this.target.takeDamage(dmg);
     this.playAnimation("fireball");
     // instantiate new fireball
     // note that it will need to get rendered.
+
+    m.add(new Fireball({
+      x: this.x,
+      y: this.y,
+      target: this.target,
+      hit: () => {
+        if (!this.target?.isAlive()) {
+          return false;
+        };
+        const dmg = randInt(10, 12);
+        this.target.takeDamage(dmg);
+      }
+    }))
 
     return true;
   }

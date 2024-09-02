@@ -16,6 +16,7 @@ import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
 import { initEnemySwordsman } from "./EnemySwordsman.js";
+import { initFireball } from "./Fireball.js";
 import { initHUD } from "./HUD.js";
 
 (async function () {
@@ -27,7 +28,7 @@ import { initHUD } from "./HUD.js";
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, bloodEffects, dps, heal, tank, hud, enemies] = await Promise.all([
+  const [map, bloodEffects, dps, heal, tank, hud, enemies, _] = await Promise.all([
     initMap(),
     initBloodEffects(),
     initCharacterDps(),
@@ -35,6 +36,7 @@ import { initHUD } from "./HUD.js";
     initCharacterTank(),
     initHUD(),
     initEnemySwordsman(),
+    initFireball(),
   ]);
 
   const characters = [dps, tank, heal];
@@ -57,16 +59,18 @@ import { initHUD } from "./HUD.js";
     selected.isSelected = true;
   };
   selectCharacter(0)();
-  onKey("1", selectCharacter(0));
-  onKey("2", selectCharacter(1));
-  onKey("3", selectCharacter(2));
-  onKey("q", () => selected.abilities[0].use());
 
   const scene = Scene({
     id: "main",
     objects: [...characters, ...enemies],
     sortFunction: depthSort,
   });
+
+  onKey("1", selectCharacter(0));
+  onKey("2", selectCharacter(1));
+  onKey("3", selectCharacter(2));
+  onKey("q", () => selected.abilities[0].use(scene));
+
 
   const effects = Scene({
     id: "effects",

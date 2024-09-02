@@ -8,7 +8,6 @@ export default class Projectile extends SpriteClass {
     this.height = 16;
     this.anchor = { x: 0.5, y: 0.5 };
     this.target = null;
-    this.caster = null;
     this.speed = properties.speed || 1;
 
     // Will we need to add additional functions from child?
@@ -27,7 +26,8 @@ export default class Projectile extends SpriteClass {
 
     // abilities need delta time to properly track cooldowns
     this.abilities.forEach((a) => a.update(dt));
-
+    this.dx += 1;
+    // return;
 
     if (this.target) {
       if (!collides(this, this.target)) {
