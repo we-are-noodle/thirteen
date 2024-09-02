@@ -1,7 +1,6 @@
-import { loadImage, SpriteSheet, randInt } from "kontra";
+import { loadImage, SpriteSheet } from "kontra";
 
-import Projectile from "./Character.js";
-import Ability from "./Ability.js";
+import Projectile from "./Projectile.js";
 
 import bloodSheet from "./assets/imgs/blood.png";
 
@@ -11,17 +10,16 @@ class Fireball extends Projectile {
       ...props,
       animations: Fireball.spritesheet.animations,
     });
-
-    // how do we pass you in?
-    // this.caster = ;
-    // this.target = ;
   }
-
 
   update(dt) {
     super.update(dt);
-    // console.log("abeek");
   }
+
+  // update(dt) {
+  //   super.update(dt);
+  //   // console.log("abeek");
+  // }
 }
 
 async function initFireball() {
@@ -29,13 +27,13 @@ async function initFireball() {
 
   const spritesheet = SpriteSheet({
     image: bloodImg,
-    frameWidth: 16,
-    frameHeight: 16,
+    frameWidth: 25,
+    frameHeight: 25,
     spacing: 0,
     margin: 0,
     animations: {
       seek: {
-        frames: [5],
+        frames: "0..4",
         frameRate: 30,
         loop: true,
       },
@@ -49,7 +47,6 @@ async function initFireball() {
 
   // We will have to spawn the fireball at the location of the caster.
   Fireball.spritesheet = spritesheet;
-
 }
 
 export default Fireball;

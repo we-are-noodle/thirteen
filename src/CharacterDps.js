@@ -17,7 +17,7 @@ class CharacterDps extends Character {
         name: "Attack",
         description: "Deal 10-12 damage to target.",
         action: (m) => this.fireball(m),
-        cooldown: 5,
+        cooldown: 1,
       }),
     );
 
@@ -42,18 +42,19 @@ class CharacterDps extends Character {
     // instantiate new fireball
     // note that it will need to get rendered.
 
-    m.add(new Fireball({
+    const f = new Fireball({
       x: this.x,
       y: this.y,
       target: this.target,
-      hit: () => {
+      onHit: () => {
         if (!this.target?.isAlive()) {
           return false;
-        };
+        }
         const dmg = randInt(10, 12);
         this.target.takeDamage(dmg);
-      }
-    }))
+      },
+    });
+    m.add(f);
 
     return true;
   }

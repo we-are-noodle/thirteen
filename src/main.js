@@ -28,16 +28,17 @@ import { initHUD } from "./HUD.js";
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, bloodEffects, dps, heal, tank, hud, enemies, _] = await Promise.all([
-    initMap(),
-    initBloodEffects(),
-    initCharacterDps(),
-    initCharacterHeal(),
-    initCharacterTank(),
-    initHUD(),
-    initEnemySwordsman(),
-    initFireball(),
-  ]);
+  const [map, bloodEffects, dps, heal, tank, hud, enemies, _] =
+    await Promise.all([
+      initMap(),
+      initBloodEffects(),
+      initCharacterDps(),
+      initCharacterHeal(),
+      initCharacterTank(),
+      initHUD(),
+      initEnemySwordsman(),
+      initFireball(),
+    ]);
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
@@ -71,7 +72,6 @@ import { initHUD } from "./HUD.js";
   onKey("3", selectCharacter(2));
   onKey("q", () => selected.abilities[0].use(scene));
 
-
   const effects = Scene({
     id: "effects",
     objects: [],
@@ -101,6 +101,12 @@ import { initHUD } from "./HUD.js";
         effects.remove(effect);
       });
       scene.update(dt);
+      scene.objects.forEach((o) => {
+        if (o.isAlive()) {
+          return;
+        }
+        scene.remove(o);
+      });
     },
     track: function () {
       track(scene);

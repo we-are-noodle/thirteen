@@ -1,48 +1,44 @@
-import {angleToTarget, collides, movePoint, SpriteClass} from "kontra";
+import { angleToTarget, collides, movePoint, SpriteClass } from "kontra";
 
 export default class Projectile extends SpriteClass {
-  init(properties) {
-    super.init(properties);
+  init(props) {
+    super.init({
+      ...props,
+      anchor: { x: 0.5, y: 0.5 },
+    });
 
-    this.width = 16;
-    this.height = 16;
-    this.anchor = { x: 0.5, y: 0.5 };
-    this.target = null;
-    this.speed = properties.speed || 1;
-
-    // Will we need to add additional functions from child?
-    this.abilities = [];
+    this.speed = props.speed || 1;
+    this.onHit = props.onHit || (() => {});
   }
 
-
-  // Will we need to add additional functions from child?
-  addAbility(ability) {
-    this.abilities.push(ability);
-  }
-
-
-  update(dt) {
+  update() {
     this.advance();
 
-    // abilities need delta time to properly track cooldowns
-    this.abilities.forEach((a) => a.update(dt));
-    this.dx += 1;
-    // return;
+    const isExploding = this.currentAnimation.name === "explode";
 
-    if (this.target) {
-      if (!collides(this, this.target)) {
-        const ang = angleToTarget(this, this.target);
-        const { x, y } = movePoint(this, ang, this.speed);
-        this.x = x;
-        this.y = y;
-        this.playAnimation("seek");
-      } else if(collides(this, this.target)) {
-        if (this.currentAnimation.name !== "explode") {
-          this.playAnimation("explode");
-        }
-
-        return;
+    if (isExploding) {
+      if (this.currentAnimation.isStopped) {
+        this.ttl = -1;
       }
+      return;
+    }
+
+    if (!this.target) {
+      return;
+    }
+
+    if (!collides(this, this.target)) {
+      const ang = angleToTarget(this, this.target);
+      const { x, y } = movePoint(this, ang, this.speed);
+      this.x = x;
+      this.y = y;
+      return;
+    }
+
+    if (collides(this, this.target)) {
+      this.onHit();
+      this.playAnimation("explode");
+      return;
     }
   }
 }
