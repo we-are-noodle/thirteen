@@ -1,10 +1,14 @@
 import { collides, SpriteClass, randInt } from "kontra";
 
 import HealthBar from "./HealthBar";
+import CharacterOutline from "./CharacterOutline";
 
 export default class Enemy extends SpriteClass {
-  init(properties) {
-    super.init(properties);
+  init(props) {
+    super.init({
+      ...props,
+      anchor: { x: 0.5, y: 0.5 },
+    });
 
     this.maxHealth = 100;
     this.health = this.maxHealth;
@@ -13,12 +17,13 @@ export default class Enemy extends SpriteClass {
     this.armor = null;
     this.width = 16;
     this.height = 16;
-    this.anchor = { x: 0.5, y: 0.5 };
     this.target = null;
-    this.speed = properties.speed || 1;
+    this.speed = props.speed || 1;
 
     // setting this to 1 ensures we attack immediately
     this.timeSinceLastAttack = 1;
+
+    this.addChild(new CharacterOutline({ color: "#E54D2E" }));
   }
 
   isAlive() {
@@ -68,6 +73,15 @@ export default class Enemy extends SpriteClass {
     console.log("Enemy Attacking!");
   }
 
+  collidesWithPointer(pointer) {
+    return (
+      pointer.x > this.x - this.width / 2 &&
+      pointer.x < this.x + this.width / 2 &&
+      pointer.y > this.y - this.height / 2 &&
+      pointer.y < this.y + this.height / 2
+    );
+  }
+
   update(dt) {
     this.advance();
 
@@ -79,18 +93,18 @@ export default class Enemy extends SpriteClass {
     }
 
     // move back and forth
-    if (this.x < randInt(90, 100)) {
-      this.dx = this.speed;
-    } else if (this.x > randInt(180, 200)) {
-      this.dx -= this.speed;
-    }
+    // if (this.x < randInt(90, 100)) {
+    //   this.dx = this.speed;
+    // } else if (this.x > randInt(180, 200)) {
+    //   this.dx -= this.speed;
+    // }
 
     // move up and down
-    if (this.y < 100) {
-      this.dy = this.speed;
-    } else if (this.y > 150) {
-      this.dy -= this.speed;
-    }
+    // if (this.y < 100) {
+    //   this.dy = this.speed;
+    // } else if (this.y > 150) {
+    //   this.dy -= this.speed;
+    // }
 
     // to do
     //abstract out collision and attack here

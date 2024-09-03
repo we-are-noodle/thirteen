@@ -42,7 +42,6 @@ async function initEnemySwordsman() {
         frameRate: 1,
       },
     },
-    onDown: function () {},
   });
 
   const swordsman1 = new EnemySwordsman({
@@ -58,8 +57,6 @@ async function initEnemySwordsman() {
     speed: 1,
     animations: spritesheet.animations,
   });
-
-  // track(swordsman);
 
   return [swordsman1, swordsman2];
 }

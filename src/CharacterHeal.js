@@ -53,6 +53,12 @@ class CharacterHeal extends Character {
       return;
     }
 
+    if (this.isSelected && this.friendlyTarget) {
+      this.friendlyTarget.showOutline = true;
+    } else if (this.friendlyTarget) {
+      this.friendlyTarget.showOutline = false;
+    }
+
     this.autoHeal.update(dt);
     this.autoHeal.use();
 

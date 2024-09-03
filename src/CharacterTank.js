@@ -1,4 +1,10 @@
-import { collides, loadImage, SpriteSheet } from "kontra";
+import {
+  collides,
+  loadImage,
+  SpriteSheet,
+  angleToTarget,
+  movePoint,
+} from "kontra";
 
 import Character from "./Character.js";
 import Ability from "./Ability.js";
@@ -28,7 +34,6 @@ class CharacterTank extends Character {
       cooldown: 1,
     });
 
-    // make sure you are utitlizing super in the proper way here.
     this.armor = 5;
     this.dexterity = 5;
   }
@@ -74,6 +79,21 @@ class CharacterTank extends Character {
       this.currentAnimation.isStopped
     ) {
       this.playAnimation("idle");
+    }
+
+    if (this.target && this.target.isAlive()) {
+      const distance = Math.hypot(
+        this.target.x - this.x,
+        this.target.y - this.y,
+      );
+
+      if (distance > this.speed && !collides(this, this.target)) {
+        const ang = angleToTarget(this, this.target);
+        const { x, y } = movePoint(this, ang, this.speed);
+        this.x = Math.round(x);
+        this.y = Math.round(y);
+        this.playAnimation("walk");
+      }
     }
   }
 }
