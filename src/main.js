@@ -1,12 +1,4 @@
-import {
-  depthSort,
-  init,
-  initInput,
-  onKey,
-  GameLoop,
-  Scene,
-  collides,
-} from "kontra";
+import { depthSort, init, initInput, onKey, GameLoop, Scene } from "kontra";
 
 import { initMap } from "./Map.js";
 import { initBloodEffects } from "./BloodEffects.js";
@@ -24,17 +16,16 @@ import { initHUD } from "./HUD.js";
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, bloodEffects, dps, heal, tank, hud, enemies, _] =
-    await Promise.all([
-      initMap(),
-      initBloodEffects(),
-      initCharacterDps(),
-      initCharacterHeal(),
-      initCharacterTank(),
-      initHUD(),
-      initEnemySwordsman(),
-      initFireball(),
-    ]);
+  const [map, bloodEffects, dps, heal, tank, hud, enemies] = await Promise.all([
+    initMap(),
+    initBloodEffects(),
+    initCharacterDps(),
+    initCharacterHeal(),
+    initCharacterTank(),
+    initHUD(),
+    initEnemySwordsman(),
+    initFireball(),
+  ]);
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);

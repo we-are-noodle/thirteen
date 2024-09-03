@@ -1,4 +1,4 @@
-import { Sprite, loadImage, SpriteSheet } from "kontra";
+import { loadImage, SpriteSheet } from "kontra";
 
 import Character from "./Character.js";
 import Ability from "./Ability.js";
