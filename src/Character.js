@@ -1,10 +1,13 @@
 import { angleToTarget, movePoint, randInt, SpriteClass } from "kontra";
 
 import CharacterSelected from "./CharacterSelected";
+import CharacterOutline from "./CharacterOutline";
 
 export default class Character extends SpriteClass {
-  init(properties) {
-    super.init(properties);
+  init(props) {
+    super.init({
+      ...props,
+    });
 
     this.maxHealth = 100;
     this.health = this.maxHealth;
@@ -16,12 +19,23 @@ export default class Character extends SpriteClass {
     this.movingTo = null;
     this.target = null;
     this.friendlyTarget = null;
-    this.speed = properties.speed || 1;
+    this.speed = props.speed || 1;
     this.isSelected = false;
 
     this.addChild(new CharacterSelected());
+    this.addChild(new CharacterOutline());
 
     this.abilities = [];
+    this.showOutline = false;
+  }
+
+  collidesWithPointer(pointer) {
+    return (
+      pointer.x > this.x - this.width / 2 &&
+      pointer.x < this.x + this.width / 2 &&
+      pointer.y > this.y - this.height / 2 &&
+      pointer.y < this.y + this.height / 2
+    );
   }
 
   addAbility(ability) {
@@ -90,6 +104,7 @@ export default class Character extends SpriteClass {
       );
 
       if (distance > this.speed) {
+        this.isMoving = true;
         const ang = angleToTarget(this, this.movingTo);
         const { x, y } = movePoint(this, ang, this.speed);
         this.x = Math.round(x);

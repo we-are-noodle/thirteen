@@ -27,18 +27,15 @@ export default class Projectile extends SpriteClass {
       return;
     }
 
-    if (!collides(this, this.target)) {
-      const ang = angleToTarget(this, this.target);
-      const { x, y } = movePoint(this, ang, this.speed);
-      this.x = x;
-      this.y = y;
-      return;
-    }
-
     if (collides(this, this.target)) {
       this.onHit();
       this.playAnimation("explode");
       return;
     }
+
+    const ang = angleToTarget(this, this.target);
+    const { x, y } = movePoint(this, ang, this.speed);
+    this.x = x;
+    this.y = y;
   }
 }

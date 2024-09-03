@@ -2,12 +2,10 @@ import {
   depthSort,
   init,
   initInput,
-  initPointer,
-  initKeys,
   onKey,
   GameLoop,
   Scene,
-  track,
+  collides,
 } from "kontra";
 
 import { initMap } from "./Map.js";
@@ -22,8 +20,6 @@ import { initHUD } from "./HUD.js";
 (async function () {
   init();
   initInput();
-  initPointer();
-  initKeys();
 
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
@@ -58,6 +54,8 @@ import { initHUD } from "./HUD.js";
     characters.forEach((c) => (c.isSelected = false));
     selected = characters[index];
     selected.isSelected = true;
+    enemies.forEach((c) => (c.showOutline = false));
+    selected.target.showOutline = true;
   };
   selectCharacter(0)();
 
@@ -80,6 +78,29 @@ import { initHUD } from "./HUD.js";
   map.handleMapClick(({ x, y, outOfBounds }) => {
     if (outOfBounds) {
       return;
+    }
+
+    const character = characters.find((c) => c.collidesWithPointer({ x, y }));
+    const enemy = enemies.find((e) => e.collidesWithPointer({ x, y }));
+
+    if (selected === heal && character) {
+      characters.forEach((c) => (c.showOutline = false));
+      heal.friendlyTarget = character;
+      return;
+    } else if ([dps, tank].includes(selected) && enemy) {
+      enemies.forEach((c) => (c.showOutline = false));
+      selected.target = enemy;
+      selected.target.showOutline = true;
+
+      if (selected === tank) {
+        selected.movingTo = null;
+      }
+      return;
+    }
+
+    if (selected === tank) {
+      selected.target = null;
+      enemies.forEach((c) => (c.showOutline = false));
     }
 
     selected.moveTo({ x, y });
@@ -107,9 +128,6 @@ import { initHUD } from "./HUD.js";
         }
         scene.remove(o);
       });
-    },
-    track: function () {
-      track(scene);
     },
     render: function () {
       map.render();

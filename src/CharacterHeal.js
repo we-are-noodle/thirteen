@@ -1,4 +1,4 @@
-import { loadImage, SpriteSheet } from "kontra";
+import { Sprite, loadImage, SpriteSheet } from "kontra";
 
 import Character from "./Character.js";
 import Ability from "./Ability.js";
@@ -51,6 +51,12 @@ class CharacterHeal extends Character {
 
     if (!this.isAlive()) {
       return;
+    }
+
+    if (this.isSelected && this.friendlyTarget) {
+      this.friendlyTarget.showOutline = true;
+    } else if (this.friendlyTarget) {
+      this.friendlyTarget.showOutline = false;
     }
 
     this.autoHeal.update(dt);

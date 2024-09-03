@@ -9,6 +9,8 @@ class Fireball extends Projectile {
     super.init({
       ...props,
       animations: Fireball.spritesheet.animations,
+      width: 16,
+      height: 16,
     });
   }
 
