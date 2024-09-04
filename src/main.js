@@ -6,6 +6,10 @@ import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
 import { initEnemySwordsman } from "./EnemySwordsman.js";
+import { initEnemyAxeman } from "./EnemyAxeman.js";
+import { initEnemySpearman } from "./EnemySpearman.js";
+import { initEnemyMusketeer } from "./EnemyMusketeer.js";
+import { initEnemyAssasin } from "./EnemyAssasin.js";
 import { initFireball } from "./Fireball.js";
 import { initHUD } from "./HUD.js";
 
@@ -16,7 +20,7 @@ import { initHUD } from "./HUD.js";
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, bloodEffects, dps, heal, tank, hud, enemies] = await Promise.all([
+  const [map, bloodEffects, dps, heal, tank, hud, swordsman, axeman, spearman, musketeer, assasin] = await Promise.all([
     initMap(),
     initBloodEffects(),
     initCharacterDps(),
@@ -24,8 +28,15 @@ import { initHUD } from "./HUD.js";
     initCharacterTank(),
     initHUD(),
     initEnemySwordsman(),
+    initEnemySpearman(),
+    initEnemyAxeman(),
+    initEnemyMusketeer(),
+    initEnemyAssasin(),
     initFireball(),
   ]);
+
+  // I know this is slop but I think chaining methods in js is funny.
+  const enemies = swordsman.concat(axeman).concat(spearman).concat(musketeer).concat(assasin);
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
