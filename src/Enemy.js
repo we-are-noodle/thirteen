@@ -1,6 +1,7 @@
-import { collides, SpriteClass, randInt } from "kontra";
-
+import {angleToTarget, collides, movePoint, randInt, SpriteClass} from "kontra";
 import HealthBar from "./HealthBar";
+import {getDistance} from "./utils.js";
+import Character from "./Character.js";
 import CharacterOutline from "./CharacterOutline";
 
 export default class Enemy extends SpriteClass {
@@ -19,7 +20,22 @@ export default class Enemy extends SpriteClass {
     this.height = 16;
     this.target = null;
     this.speed = props.speed || 1;
+    this.fixate = props.fixate || false;
+    this.taunted = false;
+    this.scene = props.scene;
+    this.timeDead = 0;
 
+    // setting this to 1 ensures we attack immediately
+    this.timeSinceLastAttack = 1;
+    this.characters = [];
+
+    this.scene.objects.forEach((object) => {
+      if (object instanceof Character) {
+        this.characters.push(object);
+      }
+    });
+
+    this.target = this.characters[randInt(0, this.characters.length - 1)];
     // setting this to 1 ensures we attack immediately
     this.timeSinceLastAttack = 1;
 
@@ -28,6 +44,10 @@ export default class Enemy extends SpriteClass {
 
   isAlive() {
     return this.health > 0;
+  }
+
+  isRemovable() {
+    return !this.isAlive() && this.timeDead >= 10;
   }
 
   dodgeAttack() {
@@ -87,6 +107,7 @@ export default class Enemy extends SpriteClass {
 
     if (!this.isAlive()) {
       this.playAnimation("dead");
+      this.timeDead += dt;
       this.dx = 0;
       this.dy = 0;
       return;
@@ -111,17 +132,38 @@ export default class Enemy extends SpriteClass {
     // set variable state to is attacking
     // handle animations in one loop
 
-    if (this.target && this.target.isAlive() && collides(this, this.target)) {
-      if (this.timeSinceLastAttack >= 1) {
-        this.attackTarget();
-        this.timeSinceLastAttack = 0;
-      }
+    if (!this.fixate && !this.taunted) {
+      this.characters.forEach((character) => {
+        if (character.isAlive() && getDistance(this, character) < getDistance(this, this.target)) {
+          this.target = character;
+        }
+      })
+    }
 
-      this.timeSinceLastAttack += dt;
-    } else {
-      this.playAnimation("idle");
-      // this makes it so when you move away and back in you get hit immediately
-      this.timeSinceLastAttack = 1;
+    if (this.target) {
+      if (!collides(this, this.target)) {
+        const ang = angleToTarget(this, this.target);
+        const { x, y } = movePoint(this, ang, this.speed);
+        this.x = x;
+        this.y = y;
+        this.playAnimation("walk");
+      } else if (this.target.isAlive()) {
+        if (this.timeSinceLastAttack >= 1) {
+          this.attackTarget();
+          this.timeSinceLastAttack = 0;
+        }
+
+        this.timeSinceLastAttack += dt;
+      } else {
+        this.characters.forEach((character) => {
+          if (character.isAlive()) {
+            this.target = character;
+          }
+        });
+        this.playAnimation("idle");
+        // this makes it so when you move away and back in you get hit immediately
+        this.timeSinceLastAttack = 1;
+      }
     }
   }
 

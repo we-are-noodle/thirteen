@@ -5,9 +5,10 @@ import { initBloodEffects } from "./BloodEffects.js";
 import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
-import { initEnemySwordsman } from "./EnemySwordsman.js";
 import { initFireball } from "./Fireball.js";
 import { initHUD } from "./HUD.js";
+import Spawner from "./EnemySpawner.js";
+import Enemy from "./Enemy.js";
 
 (async function () {
   init();
@@ -16,14 +17,13 @@ import { initHUD } from "./HUD.js";
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, bloodEffects, dps, heal, tank, hud, enemies] = await Promise.all([
+  const [map, bloodEffects, dps, heal, tank, hud] = await Promise.all([
     initMap(),
     initBloodEffects(),
     initCharacterDps(),
     initCharacterHeal(),
     initCharacterTank(),
     initHUD(),
-    initEnemySwordsman(),
     initFireball(),
   ]);
 
@@ -31,13 +31,17 @@ import { initHUD } from "./HUD.js";
   hud.setCharacters(...characters);
 
   // set some default targets
-  enemies.forEach((enemy) => {
-    enemy.target = dps;
-  });
-  tank.target = enemies[0];
-  dps.target = enemies[0];
-
-  heal.target = enemies[0];
+  // enemies.forEach((enemy) => {
+  //   enemy.target = dps;
+  // });
+  // tank.target = enemies[0];
+  // dps.target = enemies[0];
+  // heal.target = enemies[0];
+  // const spawner = new Spawner(10, swordsman);
+  // swordsman.target = dps;
+  // tank.target = swordsman;
+  // heal.target = swordsman;
+  // dps.target = swordsman;
   heal.friendlyTarget = tank;
 
   let selected;
@@ -52,10 +56,12 @@ import { initHUD } from "./HUD.js";
 
   const scene = Scene({
     id: "main",
-    objects: [...characters, ...enemies],
+    objects: [...characters],
     sortFunction: depthSort,
   });
 
+  const spawner = new Spawner(5, scene);
+  spawner.start = true;
   onKey("1", selectCharacter(0));
   onKey("2", selectCharacter(1));
   onKey("3", selectCharacter(2));
@@ -119,6 +125,14 @@ import { initHUD } from "./HUD.js";
         }
         scene.remove(o);
       });
+
+      spawner.update(dt);
+      const enemies = scene.objects.filter((o) => o instanceof Enemy);
+      characters.forEach((c) => {
+        c.setEnemeies(enemies);
+      });
+      scene.remove(enemies.filter((e) => e.isRemovable()));
+      spawner.start = enemies.length < 2;
     },
     render: function () {
       map.render();
