@@ -28,7 +28,6 @@ async function initEnemySwordsman() {
         frameRate: 1,
       },
     },
-    onDown: function () {},
   });
 }
 

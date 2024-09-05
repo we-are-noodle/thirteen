@@ -1,7 +1,9 @@
 import { getPointer, loadImage, TileEngine, track } from "kontra";
 
-import mapImg from "./assets/imgs/forrest.png";
-import mapData from "./assets/data/forrest.json";
+import greenTileset from "./assets/imgs/PFT_EngravedGreen00.png";
+import sandTileset from "./assets/imgs/PFT_GroundSand00.png";
+import brickTileset from "./assets/imgs/PWT_BasicBrick00.png";
+import mapData from "./assets/data/dungeon.json";
 
 class Map {
   constructor() {
@@ -9,9 +11,19 @@ class Map {
   }
 
   async init() {
+    const [greenTilesetImg, sandTilesetImg, brickTilesetImg] =
+      await Promise.all([
+        loadImage(greenTileset),
+        loadImage(sandTileset),
+        loadImage(brickTileset),
+      ]);
+
     // Tiled gives us a path to the image, but because Parcel will change the path to the image, we
     // have to load the it ourselves.
-    mapData.tilesets[0].image = await loadImage(mapImg);
+    mapData.tilesets[0].image = brickTilesetImg;
+    mapData.tilesets[1].image = sandTilesetImg;
+    mapData.tilesets[2].image = greenTilesetImg;
+
     this.tileEngine = TileEngine({
       ...mapData,
       onDown: (e) => {

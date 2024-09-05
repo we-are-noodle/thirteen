@@ -48,12 +48,12 @@ export default class Ability {
     return this.cooldown - this.#elapsedTime <= 0;
   }
 
-  use() {
+  use(m) {
     if (!this.canUse()) {
       return;
     }
 
-    const wasUsed = this.action();
+    const wasUsed = this.action(m);
     if (wasUsed) {
       this.#elapsedTime = 0;
     }
