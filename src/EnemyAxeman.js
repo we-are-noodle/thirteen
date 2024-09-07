@@ -10,6 +10,14 @@ class EnemyAxeman extends Enemy {
       ...props,
     });
 
+    this.basicAttack = new Ability({
+      type: "melee",
+      name: "Basic Attack",
+      description: "Deal 1 damage to target.",
+      action: () => this.attack(1),
+      cooldown: 1,
+    });
+
     this.armor = 10;
     this.dexterity = 10;
   }
@@ -34,7 +42,7 @@ async function initEnemyAxeman() {
         frameRate: 5,
       },
       attack: {
-        frames: "24..27",
+        frames: [30,31,32,33,34,35],
         frameRate: 10,
       },
       dead: {

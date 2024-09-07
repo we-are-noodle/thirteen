@@ -24,6 +24,12 @@ export default class Enemy extends SpriteClass {
     this.timeSinceLastAttack = 1;
 
     this.addChild(new CharacterOutline({ color: "#E54D2E" }));
+
+    this.abilities = [];
+  }
+
+  addAbility(ability) {
+    this.abilities.push(ability);
   }
 
   isAlive() {

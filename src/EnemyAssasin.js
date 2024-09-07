@@ -26,20 +26,19 @@ async function initEnemyAssasin() {
     margin: 0,
     animations: {
       idle: {
-        frames: [20,21,22,23,28,27,26,25],
-        // frames: [0, 1],
-        frameRate: 10,
+        frames: [0, 1],
+        frameRate: 2,
       },
       walk: {
         frames: "0..4",
         frameRate: 5,
       },
       attack: {
-        frames: "20..23",
+        frames: [20,21,22,23,28,27,26,25],
         frameRate: 10,
       },
       dead: {
-        frames: [45],
+        frames: [8],
         frameRate: 1,
       },
     },
