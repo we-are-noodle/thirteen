@@ -14,6 +14,7 @@ class EnemyAxeman extends Enemy {
     this.dexterity = 10;
     this.damage = 10;
     this.probability = 10;
+    this.amplification = 2;
   }
 }
 

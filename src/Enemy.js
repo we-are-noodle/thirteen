@@ -17,6 +17,8 @@ export default class Enemy extends SpriteClass {
     this.armor = null;
     this.damage = null;
     this.probability = null;
+    this.amplification = null;
+
     this.width = 16;
     this.height = 16;
     this.target = null;
@@ -67,8 +69,22 @@ export default class Enemy extends SpriteClass {
     return randInt(1, damage);
   }
 
+  criticalHit(probability, amplification, damage) {
+    if (randInt(1, 100) <= probability) {
+      console.log('character took Critical Hit!')
+      return damage * amplification;
+    } else {
+      return damage;
+    }
+    // below can be the final version, I just wanted to have it console log
+    // for the time being.
+    // return randInt(1,100) <= probability ? damage * amplification : damage;
+  }
+
   attackTarget() {
-    this.target.takeDamage(this.basicAttack(this.damage));
+    let damage = this.criticalHit(this.probability, this.amplification, this.basicAttack(this.damage));
+    console.log(damage);
+    this.target.takeDamage(damage);
     if (this.currentAnimation.name !== "attack") {
       this.playAnimation("attack");
     }
