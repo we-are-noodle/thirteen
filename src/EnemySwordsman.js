@@ -1,7 +1,4 @@
 import { loadImage, SpriteSheet } from "kontra";
-
-import Enemy from "./Enemy.js";
-
 import skeletonSheet from "./assets/imgs/Skeleton-Soldier.png";
 
 class EnemySwordsman extends Enemy {
@@ -21,7 +18,7 @@ class EnemySwordsman extends Enemy {
 async function initEnemySwordsman() {
   const skeletonImg = await loadImage(skeletonSheet);
 
-  const spritesheet = SpriteSheet({
+  return SpriteSheet({
     image: skeletonImg,
     frameWidth: 16,
     frameHeight: 16,
@@ -46,22 +43,6 @@ async function initEnemySwordsman() {
       },
     },
   });
-
-  const swordsman1 = new EnemySwordsman({
-    x: 50,
-    y: 50,
-    speed: 1,
-    animations: spritesheet.animations,
-  });
-
-  const swordsman2 = new EnemySwordsman({
-    x: 50,
-    y: 100,
-    speed: 1,
-    animations: spritesheet.animations,
-  });
-
-  return [swordsman1, swordsman2];
 }
 
 export { initEnemySwordsman };
