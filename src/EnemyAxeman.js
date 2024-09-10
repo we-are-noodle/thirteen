@@ -10,16 +10,10 @@ class EnemyAxeman extends Enemy {
       ...props,
     });
 
-    this.basicAttack = new Ability({
-      type: "melee",
-      name: "Basic Attack",
-      description: "Deal 1 damage to target.",
-      action: () => this.attack(1),
-      cooldown: 1,
-    });
-
     this.armor = 10;
     this.dexterity = 10;
+    this.damage = 10;
+    this.probability = 10;
   }
 }
 

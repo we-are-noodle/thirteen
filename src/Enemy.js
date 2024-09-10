@@ -15,6 +15,8 @@ export default class Enemy extends SpriteClass {
 
     this.dexterity = null;
     this.armor = null;
+    this.damage = null;
+    this.probability = null;
     this.width = 16;
     this.height = 16;
     this.target = null;
@@ -24,12 +26,6 @@ export default class Enemy extends SpriteClass {
     this.timeSinceLastAttack = 1;
 
     this.addChild(new CharacterOutline({ color: "#E54D2E" }));
-
-    this.abilities = [];
-  }
-
-  addAbility(ability) {
-    this.abilities.push(ability);
   }
 
   isAlive() {
@@ -67,12 +63,12 @@ export default class Enemy extends SpriteClass {
     this.health -= damage;
   }
 
-  basicAttack() {
-    return randInt(1, 25);
+  basicAttack(damage) {
+    return randInt(1, damage);
   }
 
   attackTarget() {
-    this.target.takeDamage(this.basicAttack());
+    this.target.takeDamage(this.basicAttack(this.damage));
     if (this.currentAnimation.name !== "attack") {
       this.playAnimation("attack");
     }
