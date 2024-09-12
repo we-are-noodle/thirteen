@@ -23,8 +23,8 @@ class CharacterDps extends Character {
 
     this.basicAttack = new Ability({
       name: "Basic Attack",
-      description: "Deal 3 damage to target.",
-      action: () => this.attack(3),
+      description: "Deal 25 damage to target.",
+      action: () => this.attack(25),
       cooldown: 2,
     });
 
@@ -50,7 +50,7 @@ class CharacterDps extends Character {
         if (!this.target?.isAlive()) {
           return false;
         }
-        const dmg = randInt(10, 12);
+        const dmg = randInt(30, 40);
         this.target.takeDamage(dmg);
       },
     });
@@ -60,6 +60,8 @@ class CharacterDps extends Character {
   }
 
   attack(damage) {
+    damage = this.basicAttack.criticalHit(20, 4, damage);
+
     if (!this.target?.isAlive()) {
       return false;
     }

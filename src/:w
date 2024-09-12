@@ -15,7 +15,6 @@ export default class Enemy extends SpriteClass {
 
     this.dexterity = null;
     this.armor = null;
-    this.damage = 15;
     this.probability = 10;
     this.amplification = 2;
     this.width = 16;
@@ -67,7 +66,7 @@ export default class Enemy extends SpriteClass {
   //
 
   basicAttack(damage) {
-    return randInt(5, damage);
+    return randInt(1, damage);
   }
 
   criticalHit(probability, amplification, damage) {

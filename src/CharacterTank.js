@@ -29,8 +29,8 @@ class CharacterTank extends Character {
     this.basicAttack = new Ability({
       type: "melee",
       name: "Basic Attack",
-      description: "Deal 1 damage to target.",
-      action: () => this.attack(1),
+      description: "Deal 25 damage to target.",
+      action: () => this.attack(25),
       cooldown: 1,
     });
 
@@ -51,7 +51,7 @@ class CharacterTank extends Character {
   }
 
   attack(damage) {
-    damage = this.basicAttack.criticalHit(30, 6, damage);
+    damage = this.basicAttack.criticalHit(15, 2, damage);
 
     if (!this.target?.isAlive() || !collides(this, this.target)) {
       return false;
