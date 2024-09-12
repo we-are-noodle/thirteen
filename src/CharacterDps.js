@@ -4,7 +4,7 @@ import Character from "./Character.js";
 import Fireball from "./Fireball.js";
 import Ability from "./Ability.js";
 
-import dpsSheet from "./assets/imgs/necromancer_sheet.png";
+import dpsSheet from "./assets/imgs/DepzDraft02-Sheet.png";
 
 class CharacterDps extends Character {
   init(props) {
@@ -68,7 +68,9 @@ class CharacterDps extends Character {
 
     console.log("Attacking!");
     this.target.takeDamage(damage);
-    this.playAnimation("attack");
+    if (this.currentAnimation.name !== "fireball") {
+      this.playAnimation("attack");
+    }
 
     return true;
   }
@@ -89,6 +91,18 @@ class CharacterDps extends Character {
     ) {
       this.playAnimation("idle");
     }
+
+    if (
+      this.currentAnimation.name !== "walk" &&
+      this.target &&
+      this.target.isAlive()
+    ) {
+      if (this.target.x < this.x) {
+        this.scaleX = -1;
+      } else {
+        this.scaleX = 1;
+      }
+    }
   }
 }
 
@@ -97,22 +111,22 @@ async function initCharacterDps() {
 
   const spritesheet = SpriteSheet({
     image: dpsImg,
-    frameWidth: 16,
-    frameHeight: 16,
+    frameWidth: 32,
+    frameHeight: 32,
     spacing: 0,
     margin: 0,
     animations: {
       idle: {
-        frames: [1, 0],
-        frameRate: 1,
+        frames: [0, 8, 16, 24, 32, 40, 48, 56],
+        frameRate: 8,
       },
       walk: {
-        frames: "0..4",
+        frames: [2, 10, 18, 26, 34, 42, 50, 58],
         frameRate: 5,
       },
       attack: {
-        frames: ["24..29", 0, 1],
-        frameRate: 5,
+        frames: [5, 13, 21, 29, 37, 45, 53, 61],
+        frameRate: 10,
         loop: false,
       },
       profile: {
@@ -124,7 +138,7 @@ async function initCharacterDps() {
         frameRate: 1,
       },
       fireball: {
-        frames: "24..29",
+        frames: [7, 15, 23, 31, 39, 47, 55, 63],
         frameRate: 10,
         loop: false,
       },

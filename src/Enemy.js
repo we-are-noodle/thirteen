@@ -1,4 +1,10 @@
-import { collides, SpriteClass, randInt } from "kontra";
+import {
+  angleToTarget,
+  movePoint,
+  collides,
+  SpriteClass,
+  randInt,
+} from "kontra";
 
 import HealthBar from "./HealthBar";
 import CharacterOutline from "./CharacterOutline";
@@ -38,10 +44,7 @@ export default class Enemy extends SpriteClass {
       console.log("Enemy dodged attack!");
       return true;
     }
-    console.log(this.dexterity);
     return false;
-    // when we want to remove console logs, we can refactor to the following:
-    // return randInt(1,100) <= this.dexterity ? true : false;
   }
 
   blockAttack() {
@@ -51,8 +54,6 @@ export default class Enemy extends SpriteClass {
     }
     console.log(this.armor);
     return false;
-    // when we want to remove console logs, we can refactor to the following:
-    // return randInt(1,100) <= this.armor ? true : false;
   }
 
   takeDamage(damage) {
@@ -115,6 +116,12 @@ export default class Enemy extends SpriteClass {
       return;
     }
 
+    if (!this.target || !this.target.isAlive()) {
+      // pick a random target
+      const characters = this.characters;
+      this.target = characters[randInt(0, characters.length - 1)];
+    }
+
     // move back and forth
     // if (this.x < randInt(90, 100)) {
     //   this.dx = this.speed;
@@ -133,8 +140,39 @@ export default class Enemy extends SpriteClass {
     //abstract out collision and attack here
     // set variable state to is attacking
     // handle animations in one loop
+    //
+    if (this.target && this.target.isAlive()) {
+      const thisCollisionTarget = {
+        x: this.x - 8,
+        y: this.y - 8,
+        width: 8,
+        height: 8,
+      };
+      if (!collides(thisCollisionTarget, this.target)) {
+        if (this.target.x < this.x) {
+          this.scaleX = -1;
+        } else {
+          this.scaleX = 1;
+        }
+        const ang = angleToTarget(this, this.target);
+        const { x, y } = movePoint(this, ang, this.speed);
+        this.x = x;
+        this.y = y;
+        this.playAnimation("walk");
+      }
+    }
 
-    if (this.target && this.target.isAlive() && collides(this, this.target)) {
+    const thisCollisionTarget = {
+      x: this.x - 8,
+      y: this.y - 8,
+      width: 8,
+      height: 8,
+    };
+    if (
+      this.target &&
+      this.target.isAlive() &&
+      collides(thisCollisionTarget, this.target)
+    ) {
       if (this.timeSinceLastAttack >= 1) {
         this.attackTarget();
         this.timeSinceLastAttack = 0;

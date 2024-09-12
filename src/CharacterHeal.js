@@ -3,7 +3,7 @@ import { loadImage, SpriteSheet } from "kontra";
 import Character from "./Character.js";
 import Ability from "./Ability.js";
 
-import healSheet from "./assets/imgs/mage_sheet.png";
+import healSheet from "./assets/imgs/RobeDraft03-Sheet.png";
 
 class CharacterHeal extends Character {
   init(props) {
@@ -15,7 +15,10 @@ class CharacterHeal extends Character {
       new Ability({
         name: "Big Heal",
         description: "Heal 20 health to target.",
-        action: () => this.heal(20),
+        action: () => {
+          this.playAnimation("bigHeal");
+          return this.heal(40);
+        },
         cooldown: 2,
       }),
     );
@@ -41,7 +44,9 @@ class CharacterHeal extends Character {
       this.friendlyTarget.health + amount,
       100,
     );
-    this.playAnimation("bigHeal");
+    if (this.currentAnimation.name !== "bigHeal") {
+      this.playAnimation("heal");
+    }
 
     return true;
   }
@@ -63,10 +68,26 @@ class CharacterHeal extends Character {
     this.autoHeal.use();
 
     if (
-      this.currentAnimation.name === "bigHeal" &&
+      ["heal", "bigHeal"].includes(this.currentAnimation.name) &&
       this.currentAnimation.isStopped
     ) {
       this.playAnimation("idle");
+    }
+
+    if (this.friendlyTarget && !this.friendlyTarget.isAlive()) {
+      this.playAnimation("idle");
+    }
+
+    if (
+      this.currentAnimation.name !== "walk" &&
+      this.friendlyTarget &&
+      this.friendlyTarget.isAlive()
+    ) {
+      if (this.friendlyTarget.x < this.x) {
+        this.scaleX = -1;
+      } else {
+        this.scaleX = 1;
+      }
     }
   }
 }
@@ -76,26 +97,26 @@ async function initCharacterHeal() {
 
   const spritesheet = SpriteSheet({
     image: healImg,
-    frameWidth: 16,
-    frameHeight: 16,
+    frameWidth: 32,
+    frameHeight: 32,
     spacing: 0,
     margin: 0,
     animations: {
       idle: {
-        frames: [1, 0],
-        frameRate: 1.5,
+        frames: [0, 8, 16, 24, 32, 40, 48, 56],
+        frameRate: 8,
       },
       walk: {
-        frames: "0..3",
+        frames: [2, 10, 18, 26, 34, 42, 50, 58],
         frameRate: 5,
       },
-      attack: {
-        frames: "24..29",
-        frameRate: 5,
+      heal: {
+        frames: [5, 13, 21, 29, 37, 45, 53, 61],
+        frameRate: 10,
       },
       bigHeal: {
-        frames: "24..29",
-        frameRate: 5,
+        frames: [7, 15, 23, 31, 39, 47, 55, 63],
+        frameRate: 10,
         loop: false,
       },
       profile: {
