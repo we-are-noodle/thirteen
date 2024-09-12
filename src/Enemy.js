@@ -1,4 +1,10 @@
-import { collides, SpriteClass, randInt } from "./kontra";
+import {
+  angleToTarget,
+  movePoint,
+  collides,
+  SpriteClass,
+  randInt,
+} from "kontra";
 
 import HealthBar from "./HealthBar";
 import CharacterOutline from "./CharacterOutline";
@@ -15,6 +21,9 @@ export default class Enemy extends SpriteClass {
 
     this.dexterity = null;
     this.armor = null;
+    this.damage = 15;
+    this.probability = 10;
+    this.amplification = 2;
     this.width = 16;
     this.height = 16;
     this.target = null;
@@ -35,10 +44,7 @@ export default class Enemy extends SpriteClass {
       console.log("Enemy dodged attack!");
       return true;
     }
-    console.log(this.dexterity);
     return false;
-    // when we want to remove console logs, we can refactor to the following:
-    // return randInt(1,100) <= this.dexterity ? true : false;
   }
 
   blockAttack() {
@@ -48,8 +54,6 @@ export default class Enemy extends SpriteClass {
     }
     console.log(this.armor);
     return false;
-    // when we want to remove console logs, we can refactor to the following:
-    // return randInt(1,100) <= this.armor ? true : false;
   }
 
   takeDamage(damage) {
@@ -61,12 +65,34 @@ export default class Enemy extends SpriteClass {
     this.health -= damage;
   }
 
-  basicAttack() {
-    return randInt(1, 25);
+  //
+
+  basicAttack(damage) {
+    return randInt(5, damage);
+  }
+
+  criticalHit(probability, amplification, damage) {
+    return;
+    if (randInt(1, 100) <= probability) {
+      console.log("character took Critical Hit!");
+      return damage * amplification;
+    } else {
+      return damage;
+    }
+    // below can be the final version, I just wanted to have it console log
+    // for the time being.
+    // return randInt(1,100) <= probability ? damage * amplification : damage;
   }
 
   attackTarget() {
-    this.target.takeDamage(this.basicAttack());
+    return;
+    let damage = this.criticalHit(
+      this.probability,
+      this.amplification,
+      this.basicAttack(this.damage),
+    );
+    console.log(damage);
+    this.target.takeDamage(damage);
     if (this.currentAnimation.name !== "attack") {
       this.playAnimation("attack");
     }
@@ -92,6 +118,12 @@ export default class Enemy extends SpriteClass {
       return;
     }
 
+    if (!this.target || !this.target.isAlive()) {
+      // pick a random target
+      const characters = this.characters;
+      this.target = characters[randInt(0, characters.length - 1)];
+    }
+
     // move back and forth
     // if (this.x < randInt(90, 100)) {
     //   this.dx = this.speed;
@@ -110,8 +142,39 @@ export default class Enemy extends SpriteClass {
     //abstract out collision and attack here
     // set variable state to is attacking
     // handle animations in one loop
+    //
+    if (this.target && this.target.isAlive()) {
+      const thisCollisionTarget = {
+        x: this.x - 8,
+        y: this.y - 8,
+        width: 8,
+        height: 8,
+      };
+      if (!collides(thisCollisionTarget, this.target)) {
+        if (this.target.x < this.x) {
+          this.scaleX = -1;
+        } else {
+          this.scaleX = 1;
+        }
+        const ang = angleToTarget(this, this.target);
+        const { x, y } = movePoint(this, ang, this.speed);
+        this.x = x;
+        this.y = y;
+        this.playAnimation("walk");
+      }
+    }
 
-    if (this.target && this.target.isAlive() && collides(this, this.target)) {
+    const thisCollisionTarget = {
+      x: this.x - 8,
+      y: this.y - 8,
+      width: 8,
+      height: 8,
+    };
+    if (
+      this.target &&
+      this.target.isAlive() &&
+      collides(thisCollisionTarget, this.target)
+    ) {
       if (this.timeSinceLastAttack >= 1) {
         this.attackTarget();
         this.timeSinceLastAttack = 0;

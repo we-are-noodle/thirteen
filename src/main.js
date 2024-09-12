@@ -32,7 +32,7 @@ import { initHUD } from "./HUD.js";
 
   // set some default targets
   enemies.forEach((enemy) => {
-    enemy.target = dps;
+    enemy.characters = characters;
   });
   tank.target = enemies[0];
   dps.target = enemies[0];
@@ -46,7 +46,9 @@ import { initHUD } from "./HUD.js";
     selected = characters[index];
     selected.isSelected = true;
     enemies.forEach((c) => (c.showOutline = false));
-    selected.target.showOutline = true;
+    if (selected.target) {
+      selected.target.showOutline = true;
+    }
   };
   selectCharacter(0)();
 
