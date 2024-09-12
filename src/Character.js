@@ -1,10 +1,4 @@
-import {
-  angleToTarget,
-  movePoint,
-  randInt,
-  radToDeg,
-  SpriteClass,
-} from "kontra";
+import { angleToTarget, movePoint, randInt, SpriteClass } from "kontra";
 
 import CharacterSelected from "./CharacterSelected";
 import CharacterOutline from "./CharacterOutline";
