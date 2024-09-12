@@ -1,4 +1,10 @@
-import { angleToTarget, movePoint, randInt, SpriteClass } from "kontra";
+import {
+  angleToTarget,
+  movePoint,
+  randInt,
+  radToDeg,
+  SpriteClass,
+} from "kontra";
 
 import CharacterSelected from "./CharacterSelected";
 import CharacterOutline from "./CharacterOutline";
@@ -13,8 +19,8 @@ export default class Character extends SpriteClass {
     this.health = this.maxHealth;
     this.dexterity = null;
     this.armor = null;
-    this.width = 16;
-    this.height = 16;
+    this.width = 32;
+    this.height = 32;
     this.anchor = { x: 0.5, y: 0.5 };
     this.movingTo = null;
     this.target = null;
@@ -105,6 +111,12 @@ export default class Character extends SpriteClass {
 
       if (distance > this.speed) {
         this.isMoving = true;
+        // flip left or right
+        if (this.movingTo.x < this.x) {
+          this.scaleX = -1;
+        } else {
+          this.scaleX = 1;
+        }
         const ang = angleToTarget(this, this.movingTo);
         const { x, y } = movePoint(this, ang, this.speed);
         this.x = Math.round(x);
