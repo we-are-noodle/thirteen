@@ -22,7 +22,7 @@ export default class Ability {
 
   criticalHit(probability, amplification, damage) {
     if (randInt(1, 100) <= probability) {
-      // console.log('Critical Hit!')
+      console.log('Critical Hit!')
       return damage * amplification;
     } else {
       return damage;
