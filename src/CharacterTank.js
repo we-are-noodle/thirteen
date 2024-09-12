@@ -45,7 +45,6 @@ class CharacterTank extends Character {
 
     console.log("Taunted!");
     this.target.target = this;
-    this.target.taunted = true;
     this.playAnimation("taunt");
 
     return true;
