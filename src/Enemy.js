@@ -4,7 +4,7 @@ import {
   collides,
   SpriteClass,
   randInt,
-} from "kontra";
+} from "./kontra";
 
 import HealthBar from "./HealthBar";
 import CharacterOutline from "./CharacterOutline";
@@ -72,7 +72,6 @@ export default class Enemy extends SpriteClass {
   }
 
   criticalHit(probability, amplification, damage) {
-    return;
     if (randInt(1, 100) <= probability) {
       console.log("character took Critical Hit!");
       return damage * amplification;
@@ -85,7 +84,6 @@ export default class Enemy extends SpriteClass {
   }
 
   attackTarget() {
-    return;
     let damage = this.criticalHit(
       this.probability,
       this.amplification,
