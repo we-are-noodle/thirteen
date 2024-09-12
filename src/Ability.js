@@ -1,4 +1,4 @@
-import { randInt } from "kontra";
+import { randInt } from "./kontra";
 
 export default class Ability {
   #elapsedTime;

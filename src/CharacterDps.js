@@ -1,4 +1,4 @@
-import { loadImage, SpriteSheet, randInt } from "kontra";
+import { loadImage, SpriteSheet, randInt } from "./kontra";
 
 import Character from "./Character.js";
 import Fireball from "./Fireball.js";

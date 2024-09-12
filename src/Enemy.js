@@ -1,4 +1,4 @@
-import { collides, SpriteClass, randInt } from "kontra";
+import { collides, SpriteClass, randInt } from "./kontra";
 
 import HealthBar from "./HealthBar";
 import CharacterOutline from "./CharacterOutline";

@@ -1,4 +1,4 @@
-import { angleToTarget, collides, movePoint, SpriteClass } from "kontra";
+import { angleToTarget, collides, movePoint, SpriteClass } from "./kontra";
 
 export default class Projectile extends SpriteClass {
   init(props) {

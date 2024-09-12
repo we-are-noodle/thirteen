@@ -1,4 +1,4 @@
-import { getPointer, loadImage, TileEngine, track } from "kontra";
+import { getPointer, loadImage, TileEngine, track } from "./kontra";
 
 import greenTileset from "./assets/imgs/PFT_EngravedGreen00.png";
 import sandTileset from "./assets/imgs/PFT_GroundSand00.png";
