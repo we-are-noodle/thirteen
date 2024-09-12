@@ -4,7 +4,7 @@ import {
   collides,
   SpriteClass,
   randInt,
-} from "kontra";
+} from "./kontra";
 
 import HealthBar from "./HealthBar";
 import CharacterOutline from "./CharacterOutline";

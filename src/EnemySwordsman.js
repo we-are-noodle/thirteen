@@ -1,4 +1,4 @@
-import { loadImage, SpriteSheet } from "kontra";
+import { loadImage, SpriteSheet } from "./kontra";
 
 import Enemy from "./Enemy.js";
 

@@ -1,4 +1,4 @@
-import { GameObjectClass, Sprite } from "kontra";
+import { GameObjectClass, Sprite } from "./kontra";
 
 import HealthBar from "./HealthBar";
 

@@ -1,4 +1,4 @@
-import { SpriteClass } from "kontra";
+import { SpriteClass } from "./kontra";
 
 export default class CharacterSelected extends SpriteClass {
   init(props) {

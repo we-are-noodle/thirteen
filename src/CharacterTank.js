@@ -4,7 +4,7 @@ import {
   SpriteSheet,
   angleToTarget,
   movePoint,
-} from "kontra";
+} from "./kontra";
 
 import Character from "./Character.js";
 import Ability from "./Ability.js";

@@ -1,4 +1,4 @@
-import { loadImage, Sprite, SpriteSheet } from "kontra";
+import { loadImage, Sprite, SpriteSheet } from "./kontra";
 
 import bloodSheet from "./assets/imgs/blood.png";
 

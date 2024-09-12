@@ -1,4 +1,4 @@
-import { depthSort, init, initInput, onKey, GameLoop, Scene } from "kontra";
+import { depthSort, init, initInput, onKey, GameLoop, Scene } from "./kontra";
 
 import { initMap } from "./Map.js";
 import { initBloodEffects } from "./BloodEffects.js";

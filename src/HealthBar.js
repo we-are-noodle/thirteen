@@ -1,4 +1,4 @@
-import { Sprite, SpriteClass } from "kontra";
+import { Sprite, SpriteClass } from "./kontra";
 
 export default class HealthBar extends SpriteClass {
   draw() {
