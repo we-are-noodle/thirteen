@@ -5,30 +5,22 @@ import terser from "@rollup/plugin-terser";
 
 export default {
   output: {
-    file: "build/index.js",
-    format: "cjs",
+    file: "src/kontra.js",
+    format: "module",
   },
-  input: "entry.js",
+  input: "kontra-for-noodle.js",
   plugins: [
     nodeResolve(),
     kontra({
       gameObject: {
         anchor: true,
         group: true,
-        opacity: true,
         scale: true,
-        ttl: true,
       },
       sprite: {
         animation: true,
         image: true,
       },
-      tileEngine: {
-        query: true,
-        tiled: true,
-      },
-      // turn on debugging
-      debug: true,
     }),
     terser(),
   ],
