@@ -37,7 +37,7 @@ async function initEnemyAxeman() {
         frameRate: 5,
       },
       attack: {
-        frames: [30,31,32,33,34,35],
+        frames: [30, 31, 32, 33, 34, 35],
         frameRate: 10,
       },
       dead: {

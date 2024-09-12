@@ -37,7 +37,7 @@ async function initEnemyAssasin() {
         frameRate: 5,
       },
       attack: {
-        frames: [20,21,22,23,28,27,26,25],
+        frames: [20, 21, 22, 23, 28, 27, 26, 25],
         frameRate: 10,
       },
       dead: {

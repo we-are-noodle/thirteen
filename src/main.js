@@ -21,7 +21,19 @@ import { initHUD } from "./HUD.js";
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, bloodEffects, dps, heal, tank, hud, swordsman, axeman, spearman, musketeer, assasin] = await Promise.all([
+  const [
+    map,
+    bloodEffects,
+    dps,
+    heal,
+    tank,
+    hud,
+    swordsman,
+    axeman,
+    spearman,
+    musketeer,
+    assasin,
+  ] = await Promise.all([
     initMap(),
     initBloodEffects(),
     initCharacterDps(),
@@ -37,7 +49,11 @@ import { initHUD } from "./HUD.js";
   ]);
 
   // I know this is slop but I think chaining methods in js is funny.
-  const enemies = swordsman.concat(axeman).concat(spearman).concat(musketeer).concat(assasin);
+  const enemies = swordsman
+    .concat(axeman)
+    .concat(spearman)
+    .concat(musketeer)
+    .concat(assasin);
 
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);

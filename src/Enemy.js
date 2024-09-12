@@ -71,7 +71,7 @@ export default class Enemy extends SpriteClass {
 
   criticalHit(probability, amplification, damage) {
     if (randInt(1, 100) <= probability) {
-      console.log('character took Critical Hit!')
+      console.log("character took Critical Hit!");
       return damage * amplification;
     } else {
       return damage;
@@ -82,7 +82,11 @@ export default class Enemy extends SpriteClass {
   }
 
   attackTarget() {
-    let damage = this.criticalHit(this.probability, this.amplification, this.basicAttack(this.damage));
+    let damage = this.criticalHit(
+      this.probability,
+      this.amplification,
+      this.basicAttack(this.damage),
+    );
     console.log(damage);
     this.target.takeDamage(damage);
     if (this.currentAnimation.name !== "attack") {

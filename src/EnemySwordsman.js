@@ -15,7 +15,6 @@ class EnemySwordsman extends Enemy {
     this.damage = 10;
     this.probability = 10;
     this.amplification = 2;
-
   }
 }
 
