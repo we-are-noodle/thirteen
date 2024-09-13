@@ -9,7 +9,7 @@ class Character extends SpriteClass {
       ...props,
     });
 
-    // mh = maxHealth, h = health, d = dexterity, a = armor
+    // mh = maxHealth, h = health, d = dexterity, a = armor,
     this.mh = 100;
     this.h = this.mh;
     this.d = null;

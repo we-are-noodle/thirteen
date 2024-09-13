@@ -20,10 +20,8 @@ export default class Enemy extends SpriteClass {
     this.h = this.mh;
 
     this.d = null;
-    this.armor = null;
-    this.damage = 15;
-    this.probability = 10;
-    this.amplification = 2;
+    this.a = null;
+    this.damage = 10;
     this.width = 32;
     this.height = 32;
     this.target = null;
@@ -60,25 +58,8 @@ export default class Enemy extends SpriteClass {
     this.h -= damage;
   }
 
-  basicAttack(damage) {
-    return randInt(5, damage);
-  }
-
-  criticalHit(probability, amplification, damage) {
-    if (randInt(1, 100) <= probability) {
-      return damage * amplification;
-    } else {
-      return damage;
-    }
-  }
-
   attackTarget() {
-    let damage = this.criticalHit(
-      this.probability,
-      this.amplification,
-      this.basicAttack(this.damage),
-    );
-    this.target.takeDamage(this, damage);
+    this.target.takeDamage(this, this.damage);
     if (this.currentAnimation.name !== "attack") {
       this.playAnimation("attack");
     }
