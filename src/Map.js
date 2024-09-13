@@ -1,41 +1,55 @@
-import { getPointer, loadImage, TileEngine, track } from "./kontra";
-
-import greenTileset from "./assets/imgs/PFT_EngravedGreen00.png";
-import sandTileset from "./assets/imgs/PFT_GroundSand00.png";
-import brickTileset from "./assets/imgs/PWT_BasicBrick00.png";
-import mapData from "./assets/data/dungeon.json";
+import { getPointer, SpriteSheet, loadImage, Sprite } from "./kontra";
+import mapSheet from "./assets/imgs/m.png";
 
 class Map {
-  constructor() {
-    this.tileEngine = null;
+  constructor(canvas) {
+    this.canvas = canvas;
   }
 
   async init() {
-    const [greenTilesetImg, sandTilesetImg, brickTilesetImg] =
-      await Promise.all([
-        loadImage(greenTileset),
-        loadImage(sandTileset),
-        loadImage(brickTileset),
-      ]);
+    window.addEventListener("click", this.#onDownHandler.bind(this));
+    const mapImage = await loadImage(mapSheet);
 
-    // Tiled gives us a path to the image, but because Parcel will change the path to the image, we
-    // have to load the it ourselves.
-    mapData.tilesets[0].image = brickTilesetImg;
-    mapData.tilesets[1].image = sandTilesetImg;
-    mapData.tilesets[2].image = greenTilesetImg;
-
-    this.tileEngine = TileEngine({
-      ...mapData,
-      onDown: (e) => {
-        e.preventDefault();
-        this.#onDownHandler();
+    const s = {
+      frameWidth: 16,
+      frameHeight: 16,
+      spacing: 0,
+      margin: 0,
+      animations: {
+        grass: {
+          frames: 0,
+        },
+        wall: {
+          frames: 1,
+        },
       },
-    });
-    track(this.tileEngine);
+      image: mapImage,
+    };
+
+    const spritesheet = SpriteSheet(s);
+
+    this.map = [];
+    for (let y = 0; y < 13; y++) {
+      for (let x = 0; x < 20; x++) {
+        const sprite = new Sprite({
+          x: x * 16,
+          y: y * 16,
+          animations: spritesheet.animations,
+        });
+        if (y < 3 || y > 11) {
+          sprite.playAnimation("wall");
+        }
+        this.map.push(sprite);
+      }
+    }
   }
 
-  isOutOfBounds({ x, y }) {
-    return this.tileEngine.tileAtLayer("outOfBounds", { x, y });
+  isOutOfBounds({ y }) {
+    if (y <= 50 || y >= 180) {
+      return true;
+    }
+
+    return false;
   }
 
   handleMapClick(callback) {
@@ -45,12 +59,16 @@ class Map {
   }
 
   render() {
-    this.tileEngine.render();
+    this.map.forEach((m) => m.render());
   }
 
-  #onDownHandler() {
+  #onDownHandler(e) {
+    if (e.target !== this.canvas) {
+      return;
+    }
+
     const { x, y } = getPointer();
-    const outOfBounds = this.tileEngine.tileAtLayer("outOfBounds", { x, y });
+    const outOfBounds = this.isOutOfBounds({ y });
     const event = new CustomEvent("mapClick", {
       detail: { x, y, outOfBounds },
     });
@@ -58,8 +76,8 @@ class Map {
   }
 }
 
-async function initMap() {
-  const map = new Map();
+async function initMap(canvas) {
+  const map = new Map(canvas);
   await map.init();
 
   return map;

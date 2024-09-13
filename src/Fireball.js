@@ -2,26 +2,21 @@ import { loadImage, SpriteSheet } from "./kontra";
 
 import Projectile from "./Projectile.js";
 
-import bloodSheet from "./assets/imgs/blood.png";
+import bloodSheet from "./assets/imgs/d.png";
 
 class Fireball extends Projectile {
   init(props) {
     super.init({
       ...props,
       animations: Fireball.spritesheet.animations,
-      width: 16,
-      height: 16,
+      width: 12,
+      height: 12,
     });
   }
 
   update(dt) {
     super.update(dt);
   }
-
-  // update(dt) {
-  //   super.update(dt);
-  //   // console.log("abeek");
-  // }
 }
 
 async function initFireball() {
@@ -29,18 +24,18 @@ async function initFireball() {
 
   const spritesheet = SpriteSheet({
     image: bloodImg,
-    frameWidth: 25,
-    frameHeight: 25,
+    frameWidth: 32,
+    frameHeight: 32,
     spacing: 0,
     margin: 0,
     animations: {
       seek: {
-        frames: "0..4",
-        frameRate: 30,
+        frames: [0, 1],
+        frameRate: 4,
         loop: true,
       },
       explode: {
-        frames: "0..29",
+        frames: [0],
         frameRate: 30,
         loop: false,
       },

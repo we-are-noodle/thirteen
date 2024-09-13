@@ -2,8 +2,8 @@ import { Sprite, SpriteClass } from "./kontra";
 
 export default class HealthBar extends SpriteClass {
   draw() {
-    const hp = Math.max(0, this.combatant.health);
-    const healthPercent = hp / this.combatant.maxHealth;
+    const hp = Math.max(0, this.combatant.h);
+    const healthPercent = hp / this.combatant.mh;
     const hpWidth = Math.ceil(healthPercent * this.maxWidth);
 
     const border = Sprite({

@@ -1,18 +1,19 @@
-import { loadImage, SpriteSheet } from "./kontra";
+import { loadImage, SpriteSheet, randInt } from "./kontra";
 
 import Enemy from "./Enemy.js";
 
-import skeletonSheet from "./assets/imgs/Skeleton-Soldier.png";
+import skeletonSheet from "./assets/imgs/e.png";
 
-class EnemySwordsman extends Enemy {
-  init(props) {
-    super.init({
-      ...props,
+function spawnRandomEnemies(animations, num) {
+  return Array.from({ length: num }, () => {
+    const enemy = new Enemy({
+      x: randInt(0, 2) % 2 === 0 ? -10 : 330,
+      y: randInt(60, 190),
+      speed: 1,
+      animations,
     });
-
-    this.armor = 10;
-    this.dexterity = 10;
-  }
+    return enemy;
+  });
 }
 
 async function initEnemySwordsman() {
@@ -20,45 +21,33 @@ async function initEnemySwordsman() {
 
   const spritesheet = SpriteSheet({
     image: skeletonImg,
-    frameWidth: 16,
-    frameHeight: 16,
+    frameWidth: 32,
+    frameHeight: 32,
     spacing: 0,
     margin: 0,
     animations: {
-      idle: {
-        frames: [40, 41],
+      i: {
+        frames: [3, 4],
         frameRate: 2,
       },
-      walk: {
-        frames: "0..4",
+      w: {
+        frames: [3, 4],
         frameRate: 5,
       },
       attack: {
-        frames: "20..23",
+        frames: [3, 4, 1, 2],
         frameRate: 10,
       },
       dead: {
-        frames: [45],
+        frames: [0],
         frameRate: 1,
       },
     },
   });
 
-  const swordsman1 = new EnemySwordsman({
-    x: 50,
-    y: 50,
-    speed: 1,
-    animations: spritesheet.animations,
-  });
-
-  const swordsman2 = new EnemySwordsman({
-    x: 50,
-    y: 100,
-    speed: 1,
-    animations: spritesheet.animations,
-  });
-
-  return [swordsman1, swordsman2];
+  return (num) => {
+    return spawnRandomEnemies(spritesheet.animations, num);
+  };
 }
 
 export { initEnemySwordsman };

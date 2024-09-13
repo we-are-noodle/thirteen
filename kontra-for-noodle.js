@@ -15,8 +15,6 @@ import {
   Sprite,
   SpriteClass,
   SpriteSheet,
-  TileEngine,
-  track,
 } from "kontra";
 
 export {
@@ -36,6 +34,4 @@ export {
   Sprite,
   SpriteClass,
   SpriteSheet,
-  TileEngine,
-  track,
 };

@@ -32,7 +32,6 @@ class BloodEffects {
       x,
       y,
       animations: this.spritesheet.animations,
-      ttl: 50,
     });
 
     return bloodEffect;

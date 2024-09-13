@@ -4,57 +4,48 @@ import Character from "./Character.js";
 import Fireball from "./Fireball.js";
 import Ability from "./Ability.js";
 
-import dpsSheet from "./assets/imgs/DepzDraft02-Sheet.png";
+import dpsSheet from "./assets/imgs/d.png";
 
 class CharacterDps extends Character {
   init(props) {
-    super.init({
-      ...props,
-    });
+    super.init(props);
 
     this.addAbility(
       new Ability({
-        name: "Attack",
-        description: "Deal 10-12 damage to target.",
         action: (m) => this.fireball(m),
         cooldown: 1,
       }),
     );
 
     this.basicAttack = new Ability({
-      name: "Basic Attack",
-      description: "Deal 25 damage to target.",
       action: () => this.attack(25),
       cooldown: 2,
     });
 
-    this.armor = 8;
-    this.dexterity = 8;
+    this.a = 8;
+    this.d = 8;
   }
 
   fireball(m) {
-    if (!this.target?.isAlive()) {
+    if (!this.target?.iA()) {
       return false;
     }
 
-    console.log("Send fireball!");
-    this.playAnimation("fireball");
-    // instantiate new fireball
-    // note that it will need to get rendered.
+    this.playAnimation("ability");
 
     const f = new Fireball({
       x: this.x,
       y: this.y,
       target: this.target,
       onHit: () => {
-        if (!this.target?.isAlive()) {
+        if (!this.target?.iA()) {
           return false;
         }
         const dmg = randInt(30, 40);
         this.target.takeDamage(dmg);
       },
     });
-    m.add(f);
+    m.push(f);
 
     return true;
   }
@@ -62,13 +53,12 @@ class CharacterDps extends Character {
   attack(damage) {
     damage = this.basicAttack.criticalHit(20, 4, damage);
 
-    if (!this.target?.isAlive()) {
+    if (!this.target?.iA()) {
       return false;
     }
 
-    console.log("Attacking!");
     this.target.takeDamage(damage);
-    if (this.currentAnimation.name !== "fireball") {
+    if (this.currentAnimation.name !== "ability") {
       this.playAnimation("attack");
     }
 
@@ -78,25 +68,27 @@ class CharacterDps extends Character {
   update(dt) {
     super.update(dt);
 
-    if (!this.isAlive()) {
+    if (!this.iA()) {
       return;
     }
 
     this.basicAttack.update(dt);
     this.basicAttack.use();
 
-    if (
-      ["attack", "fireball"].includes(this.currentAnimation.name) &&
-      this.currentAnimation.isStopped
-    ) {
-      this.playAnimation("idle");
+    if (!this.target) {
+      this.target = this.enemies[randInt(0, this.enemies.length - 1)];
+      this.enemies.forEach((c) => (c.so = false));
+      this.target.so = true;
     }
 
     if (
-      this.currentAnimation.name !== "walk" &&
-      this.target &&
-      this.target.isAlive()
+      ["attack", "ability"].includes(this.currentAnimation.name) &&
+      this.currentAnimation.isStopped
     ) {
+      this.playAnimation("i");
+    }
+
+    if (this.currentAnimation.name !== "w" && this.target && this.target.iA()) {
       if (this.target.x < this.x) {
         this.scaleX = -1;
       } else {
@@ -109,41 +101,12 @@ class CharacterDps extends Character {
 async function initCharacterDps() {
   const dpsImg = await loadImage(dpsSheet);
 
-  const spritesheet = SpriteSheet({
+  const s = {
+    ...Character.frameRates,
     image: dpsImg,
-    frameWidth: 32,
-    frameHeight: 32,
-    spacing: 0,
-    margin: 0,
-    animations: {
-      idle: {
-        frames: [0, 8, 16, 24, 32, 40, 48, 56],
-        frameRate: 8,
-      },
-      walk: {
-        frames: [2, 10, 18, 26, 34, 42, 50, 58],
-        frameRate: 5,
-      },
-      attack: {
-        frames: [5, 13, 21, 29, 37, 45, 53, 61],
-        frameRate: 10,
-        loop: false,
-      },
-      profile: {
-        frames: [1],
-        frameRate: 1,
-      },
-      dead: {
-        frames: [30],
-        frameRate: 1,
-      },
-      fireball: {
-        frames: [7, 15, 23, 31, 39, 47, 55, 63],
-        frameRate: 10,
-        loop: false,
-      },
-    },
-  });
+  };
+
+  const spritesheet = SpriteSheet(s);
 
   const dps = new CharacterDps({
     x: 80,

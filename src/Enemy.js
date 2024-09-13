@@ -16,85 +16,53 @@ export default class Enemy extends SpriteClass {
       anchor: { x: 0.5, y: 0.5 },
     });
 
-    this.maxHealth = 100;
-    this.health = this.maxHealth;
+    this.mh = 100;
+    this.h = this.mh;
 
-    this.dexterity = null;
-    this.armor = null;
-    this.damage = 15;
-    this.probability = 10;
-    this.amplification = 2;
-    this.width = 16;
-    this.height = 16;
+    this.d = null;
+    this.a = null;
+    this.damage = 5;
+    this.width = 32;
+    this.height = 32;
     this.target = null;
     this.speed = props.speed || 1;
 
     // setting this to 1 ensures we attack immediately
     this.timeSinceLastAttack = 1;
 
-    this.addChild(new CharacterOutline({ color: "#E54D2E" }));
+    this.co = new CharacterOutline({ parent: this, color: "#E54D2E" });
   }
 
-  isAlive() {
-    return this.health > 0;
+  iA() {
+    return this.h > 0;
   }
 
   dodgeAttack() {
-    if (randInt(1, 100) <= this.dexterity) {
-      console.log("Enemy dodged attack!");
+    if (randInt(1, 100) <= this.d) {
       return true;
     }
     return false;
   }
 
   blockAttack() {
-    if (randInt(1, 100) <= this.armor) {
-      console.log("Enemy blocked attack!");
+    if (randInt(1, 100) <= this.a) {
       return true;
     }
-    console.log(this.armor);
     return false;
   }
 
   takeDamage(damage) {
-    // do we want the percentages to aggregate like below?
     if (this.blockAttack() || this.dodgeAttack()) {
       return;
     }
-    console.log(`Enemy took ${damage} damage.`);
-    this.health -= damage;
-  }
-
-  //
-
-  basicAttack(damage) {
-    return randInt(5, damage);
-  }
-
-  criticalHit(probability, amplification, damage) {
-    if (randInt(1, 100) <= probability) {
-      console.log("character took Critical Hit!");
-      return damage * amplification;
-    } else {
-      return damage;
-    }
-    // below can be the final version, I just wanted to have it console log
-    // for the time being.
-    // return randInt(1,100) <= probability ? damage * amplification : damage;
+    this.h -= damage;
   }
 
   attackTarget() {
-    let damage = this.criticalHit(
-      this.probability,
-      this.amplification,
-      this.basicAttack(this.damage),
-    );
-    console.log(damage);
-    this.target.takeDamage(damage);
+    this.target.takeDamage(this, this.damage);
     if (this.currentAnimation.name !== "attack") {
       this.playAnimation("attack");
     }
-    console.log("Enemy Attacking!");
   }
 
   collidesWithPointer(pointer) {
@@ -109,69 +77,56 @@ export default class Enemy extends SpriteClass {
   update(dt) {
     this.advance();
 
-    if (!this.isAlive()) {
+    if (!this.iA()) {
       this.playAnimation("dead");
-      this.dx = 0;
-      this.dy = 0;
+      this.so = false;
+      this.opacity = 0.5;
       return;
     }
 
-    if (!this.target || !this.target.isAlive()) {
+    if (!this.target || !this.target.iA()) {
       // pick a random target
       const characters = this.characters;
       this.target = characters[randInt(0, characters.length - 1)];
     }
 
-    // move back and forth
-    // if (this.x < randInt(90, 100)) {
-    //   this.dx = this.speed;
-    // } else if (this.x > randInt(180, 200)) {
-    //   this.dx -= this.speed;
-    // }
-
-    // move up and down
-    // if (this.y < 100) {
-    //   this.dy = this.speed;
-    // } else if (this.y > 150) {
-    //   this.dy -= this.speed;
-    // }
-
-    // to do
-    //abstract out collision and attack here
-    // set variable state to is attacking
-    // handle animations in one loop
-    //
-    if (this.target && this.target.isAlive()) {
-      const thisCollisionTarget = {
-        x: this.x - 8,
-        y: this.y - 8,
-        width: 8,
-        height: 8,
-      };
-      if (!collides(thisCollisionTarget, this.target)) {
-        if (this.target.x < this.x) {
-          this.scaleX = -1;
-        } else {
-          this.scaleX = 1;
-        }
+    if (this.target && this.target.iA()) {
+      if (this.target.x < this.x) {
+        this.scaleX = -1;
+      } else {
+        this.scaleX = 1;
+      }
+      if (
+        !collides(
+          {
+            x: this.x - 8,
+            y: this.y - 8,
+            width: 8,
+            height: 8,
+          },
+          this.target,
+        )
+      ) {
         const ang = angleToTarget(this, this.target);
         const { x, y } = movePoint(this, ang, this.speed);
         this.x = x;
         this.y = y;
-        this.playAnimation("walk");
+        this.playAnimation("w");
       }
     }
 
-    const thisCollisionTarget = {
-      x: this.x - 8,
-      y: this.y - 8,
-      width: 8,
-      height: 8,
-    };
     if (
       this.target &&
-      this.target.isAlive() &&
-      collides(thisCollisionTarget, this.target)
+      this.target.iA() &&
+      collides(
+        {
+          x: this.x - 8,
+          y: this.y - 8,
+          width: 8,
+          height: 8,
+        },
+        this.target,
+      )
     ) {
       if (this.timeSinceLastAttack >= 1) {
         this.attackTarget();
@@ -180,7 +135,7 @@ export default class Enemy extends SpriteClass {
 
       this.timeSinceLastAttack += dt;
     } else {
-      this.playAnimation("idle");
+      this.playAnimation("i");
       // this makes it so when you move away and back in you get hit immediately
       this.timeSinceLastAttack = 1;
     }
@@ -189,14 +144,16 @@ export default class Enemy extends SpriteClass {
   draw() {
     super.draw();
 
-    if (this.isAlive()) {
+    this.co.draw();
+
+    if (this.iA()) {
       const healthBar = new HealthBar({
         parent: this,
         combatant: this,
         maxWidth: 12,
         height: 2,
-        x: 2,
-        y: -4,
+        x: 10,
+        y: 0,
       });
       healthBar.render();
     }
