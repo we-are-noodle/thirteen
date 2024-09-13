@@ -26,11 +26,11 @@ async function initEnemySwordsman() {
     spacing: 0,
     margin: 0,
     animations: {
-      idle: {
+      i: {
         frames: [3, 4],
         frameRate: 2,
       },
-      walk: {
+      w: {
         frames: [3, 4],
         frameRate: 5,
       },

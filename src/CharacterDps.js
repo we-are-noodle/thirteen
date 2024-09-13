@@ -27,7 +27,7 @@ class CharacterDps extends Character {
   }
 
   fireball(m) {
-    if (!this.target?.isAlive()) {
+    if (!this.target?.iA()) {
       return false;
     }
 
@@ -38,7 +38,7 @@ class CharacterDps extends Character {
       y: this.y,
       target: this.target,
       onHit: () => {
-        if (!this.target?.isAlive()) {
+        if (!this.target?.iA()) {
           return false;
         }
         const dmg = randInt(30, 40);
@@ -53,7 +53,7 @@ class CharacterDps extends Character {
   attack(damage) {
     damage = this.basicAttack.criticalHit(20, 4, damage);
 
-    if (!this.target?.isAlive()) {
+    if (!this.target?.iA()) {
       return false;
     }
 
@@ -68,7 +68,7 @@ class CharacterDps extends Character {
   update(dt) {
     super.update(dt);
 
-    if (!this.isAlive()) {
+    if (!this.iA()) {
       return;
     }
 
@@ -77,22 +77,18 @@ class CharacterDps extends Character {
 
     if (!this.target) {
       this.target = this.enemies[randInt(0, this.enemies.length - 1)];
-      this.enemies.forEach((c) => (c.showOutline = false));
-      this.target.showOutline = true;
+      this.enemies.forEach((c) => (c.so = false));
+      this.target.so = true;
     }
 
     if (
       ["attack", "ability"].includes(this.currentAnimation.name) &&
       this.currentAnimation.isStopped
     ) {
-      this.playAnimation("idle");
+      this.playAnimation("i");
     }
 
-    if (
-      this.currentAnimation.name !== "walk" &&
-      this.target &&
-      this.target.isAlive()
-    ) {
+    if (this.currentAnimation.name !== "w" && this.target && this.target.iA()) {
       if (this.target.x < this.x) {
         this.scaleX = -1;
       } else {

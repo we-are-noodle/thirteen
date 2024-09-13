@@ -91,7 +91,6 @@ class HUD extends GameObjectClass {
       this.#profiles[i].y = profileY;
       this.#profiles[i].render();
 
-      this.context.font = "8px monospace";
       this.context.fillText(`${i + 1}`, hl.x + 3, 14);
 
       abilityIcons.forEach((icon) => {

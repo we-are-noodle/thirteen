@@ -1,4 +1,4 @@
-import { depthSort, init, initInput, onKey, GameLoop, randInt } from "./kontra";
+import { depthSort, init, initInput, onKey, GameLoop } from "./kontra";
 
 import { initMap } from "./Map.js";
 import { initCharacterDps } from "./CharacterDps.js";
@@ -12,7 +12,7 @@ import { initHUD } from "./HUD.js";
   init();
   initInput();
 
-  const canvas = document.getElementById("game");
+  const canvas = document.querySelector("canvas");
 
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
@@ -36,16 +36,16 @@ import { initHUD } from "./HUD.js";
   });
   characters.forEach((character) => (character.enemies = enemies));
 
-  heal.friendlyTarget = tank;
+  heal.ft = tank;
 
   let selected;
   const selectCharacter = (index) => () => {
     characters.forEach((c) => (c.isSelected = false));
     selected = characters[index];
     selected.isSelected = true;
-    enemies.forEach((c) => (c.showOutline = false));
+    enemies.forEach((c) => (c.so = false));
     if (selected.target) {
-      selected.target.showOutline = true;
+      selected.target.so = true;
     }
   };
   selectCharacter(0)();
@@ -66,7 +66,7 @@ import { initHUD } from "./HUD.js";
     }
 
     const character = characters.find((c) => {
-      if (!c.isAlive()) {
+      if (!c.iA()) {
         return false;
       }
 
@@ -74,7 +74,7 @@ import { initHUD } from "./HUD.js";
     });
 
     const enemy = enemies.find((e) => {
-      if (!e.isAlive()) {
+      if (!e.iA()) {
         return false;
       }
 
@@ -82,13 +82,13 @@ import { initHUD } from "./HUD.js";
     });
 
     if (selected === heal && character) {
-      characters.forEach((c) => (c.showOutline = false));
-      heal.friendlyTarget = character;
+      characters.forEach((c) => (c.so = false));
+      heal.ft = character;
       return;
     } else if ([dps, tank].includes(selected) && enemy) {
-      enemies.forEach((c) => (c.showOutline = false));
+      enemies.forEach((c) => (c.so = false));
       selected.target = enemy;
-      selected.target.showOutline = true;
+      selected.target.so = true;
 
       if (selected === tank) {
         selected.movingTo = null;
@@ -97,7 +97,7 @@ import { initHUD } from "./HUD.js";
     }
 
     if (selected === tank) {
-      selected.showOutline = false;
+      selected.so = false;
       selected.target = null;
     }
 
@@ -111,13 +111,13 @@ import { initHUD } from "./HUD.js";
     blur: true,
     fps: 40,
     update: function (dt) {
-      if (characters.every((c) => !c.isAlive())) {
+      if (characters.every((c) => !c.iA())) {
         gameOver = true;
         return;
       }
 
       hud.update();
-      if (enemies.every((e) => !e.isAlive())) {
+      if (enemies.every((e) => !e.iA())) {
         level += 1;
         const newEnemies = spawner(Math.min(level, 13));
         newEnemies.forEach((enemy) => {
@@ -129,10 +129,10 @@ import { initHUD } from "./HUD.js";
       }
       objects.sort((obj1, obj2) => {
         const order = depthSort(obj1, obj2, "y");
-        if (obj1.isAlive && obj2.isAlive) {
-          if (obj1.isAlive() && !obj2.isAlive()) {
+        if (obj1.iA && obj2.iA) {
+          if (obj1.iA() && !obj2.iA()) {
             return 1;
-          } else if (!obj1.isAlive() && obj2.isAlive()) {
+          } else if (!obj1.iA() && obj2.iA()) {
             return -1;
           }
         }
@@ -157,7 +157,7 @@ import { initHUD } from "./HUD.js";
 
       if (gameOver) {
         ctx.fillText("Game Over", 100, 100);
-        ctx.fillText("Press R to restart", 100, 120);
+        ctx.fillText("Press R to retry", 100, 120);
       }
     },
   });

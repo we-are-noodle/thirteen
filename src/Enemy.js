@@ -33,7 +33,7 @@ export default class Enemy extends SpriteClass {
     this.co = new CharacterOutline({ parent: this, color: "#E54D2E" });
   }
 
-  isAlive() {
+  iA() {
     return this.h > 0;
   }
 
@@ -77,50 +77,56 @@ export default class Enemy extends SpriteClass {
   update(dt) {
     this.advance();
 
-    if (!this.isAlive()) {
+    if (!this.iA()) {
       this.playAnimation("dead");
-      this.showOutline = false;
+      this.so = false;
       this.opacity = 0.5;
       return;
     }
 
-    if (!this.target || !this.target.isAlive()) {
+    if (!this.target || !this.target.iA()) {
       // pick a random target
       const characters = this.characters;
       this.target = characters[randInt(0, characters.length - 1)];
     }
 
-    if (this.target && this.target.isAlive()) {
-      const thisCollisionTarget = {
-        x: this.x - 8,
-        y: this.y - 8,
-        width: 8,
-        height: 8,
-      };
+    if (this.target && this.target.iA()) {
       if (this.target.x < this.x) {
         this.scaleX = -1;
       } else {
         this.scaleX = 1;
       }
-      if (!collides(thisCollisionTarget, this.target)) {
+      if (
+        !collides(
+          {
+            x: this.x - 8,
+            y: this.y - 8,
+            width: 8,
+            height: 8,
+          },
+          this.target,
+        )
+      ) {
         const ang = angleToTarget(this, this.target);
         const { x, y } = movePoint(this, ang, this.speed);
         this.x = x;
         this.y = y;
-        this.playAnimation("walk");
+        this.playAnimation("w");
       }
     }
 
-    const thisCollisionTarget = {
-      x: this.x - 8,
-      y: this.y - 8,
-      width: 8,
-      height: 8,
-    };
     if (
       this.target &&
-      this.target.isAlive() &&
-      collides(thisCollisionTarget, this.target)
+      this.target.iA() &&
+      collides(
+        {
+          x: this.x - 8,
+          y: this.y - 8,
+          width: 8,
+          height: 8,
+        },
+        this.target,
+      )
     ) {
       if (this.timeSinceLastAttack >= 1) {
         this.attackTarget();
@@ -129,7 +135,7 @@ export default class Enemy extends SpriteClass {
 
       this.timeSinceLastAttack += dt;
     } else {
-      this.playAnimation("idle");
+      this.playAnimation("i");
       // this makes it so when you move away and back in you get hit immediately
       this.timeSinceLastAttack = 1;
     }
@@ -140,7 +146,7 @@ export default class Enemy extends SpriteClass {
 
     this.co.draw();
 
-    if (this.isAlive()) {
+    if (this.iA()) {
       const healthBar = new HealthBar({
         parent: this,
         combatant: this,

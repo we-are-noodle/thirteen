@@ -17,7 +17,8 @@ export default class CharacterSelected extends SpriteClass {
   }
 
   draw() {
-    if (this.parent.showOutline) {
+    // so -> showOutline
+    if (this.parent.so) {
       this.context.strokeStyle = this.color;
       this.context.lineWidth = 2;
       this.context.beginPath();

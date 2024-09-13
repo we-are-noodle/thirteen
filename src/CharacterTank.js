@@ -53,10 +53,7 @@ class CharacterTank extends Character {
       width: 8,
       height: 8,
     };
-    if (
-      !this.target?.isAlive() ||
-      !collides(thisCollisionTarget, this.target)
-    ) {
+    if (!this.target?.iA() || !collides(thisCollisionTarget, this.target)) {
       return false;
     }
 
@@ -71,7 +68,7 @@ class CharacterTank extends Character {
   update(dt) {
     super.update(dt);
 
-    if (!this.isAlive()) {
+    if (!this.iA()) {
       return;
     }
 
@@ -82,14 +79,14 @@ class CharacterTank extends Character {
       ["attack", "ability"].includes(this.currentAnimation.name) &&
       this.currentAnimation.isStopped
     ) {
-      this.playAnimation("idle");
+      this.playAnimation("i");
     }
 
-    if (this.target && !this.target.isAlive()) {
-      this.playAnimation("idle");
+    if (this.target && !this.target.iA()) {
+      this.playAnimation("i");
     }
 
-    if (this.target && this.target.isAlive()) {
+    if (this.target && this.target.iA()) {
       const thisCollisionTarget = {
         x: this.x - 8,
         y: this.y - 8,
@@ -106,7 +103,7 @@ class CharacterTank extends Character {
         const { x, y } = movePoint(this, ang, this.speed);
         this.x = x;
         this.y = y;
-        this.playAnimation("walk");
+        this.playAnimation("w");
       }
     }
   }

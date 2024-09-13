@@ -19,7 +19,7 @@ class Character extends SpriteClass {
     this.anchor = { x: 0.5, y: 0.5 };
     this.movingTo = null;
     this.target = null;
-    this.friendlyTarget = null;
+    this.ft = null;
     this.speed = props.speed || 1;
     this.isSelected = false;
 
@@ -27,7 +27,7 @@ class Character extends SpriteClass {
     this.co = new CharacterOutline({ parent: this });
 
     this.abilities = [];
-    this.showOutline = false;
+    this.so = false;
   }
 
   collidesWithPointer(pointer) {
@@ -47,7 +47,7 @@ class Character extends SpriteClass {
     this.movingTo = { x, y };
   }
 
-  isAlive() {
+  iA() {
     return this.h > 0;
   }
 
@@ -66,11 +66,11 @@ class Character extends SpriteClass {
   }
 
   takeDamage(enemy, damage) {
-    if (this.isAlive() && !this.target) {
+    if (this.iA() && !this.target) {
       this.target = enemy;
       if (this.isSelected) {
-        this.enemies.forEach((c) => (c.showOutline = false));
-        enemy.showOutline = true;
+        this.enemies.forEach((c) => (c.so = false));
+        enemy.so = true;
       }
     }
 
@@ -95,13 +95,13 @@ class Character extends SpriteClass {
   update(dt) {
     this.advance();
 
-    if (!this.isAlive()) {
+    if (!this.iA()) {
       this.playAnimation("dead");
       return;
     }
 
-    if (this.target && !this.target.isAlive()) {
-      this.target.showOutline = false;
+    if (this.target && !this.target.iA()) {
+      this.target.so = false;
       this.target = null;
     }
 
@@ -125,10 +125,10 @@ class Character extends SpriteClass {
         const { x, y } = movePoint(this, ang, this.speed);
         this.x = Math.round(x);
         this.y = Math.round(y);
-        this.playAnimation("walk");
+        this.playAnimation("w");
       } else {
         this.movingTo = null;
-        this.playAnimation("idle");
+        this.playAnimation("i");
 
         // this makes it so when you move away and back in you get hit immediately
         // not all characters should have this
@@ -147,11 +147,11 @@ Character.frameRates = {
   spacing: 0,
   margin: 0,
   animations: {
-    idle: {
+    i: {
       frames: [4, 5],
       frameRate: 2,
     },
-    walk: {
+    w: {
       frames: [6, 7],
       frameRate: 6,
     },
@@ -166,12 +166,10 @@ Character.frameRates = {
       frameRate: 6,
     },
     profile: {
-      frames: [1],
-      frameRate: 1,
+      frames: 1,
     },
     dead: {
-      frames: [8],
-      frameRate: 1,
+      frames: 8,
     },
   },
 };

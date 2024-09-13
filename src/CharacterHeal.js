@@ -14,7 +14,7 @@ class CharacterHeal extends Character {
     this.addAbility(
       new Ability({
         action: () => {
-          this.playAnimation("bigHeal");
+          this.playAnimation("hh");
           return this.heal(40);
         },
         cooldown: 2,
@@ -31,12 +31,12 @@ class CharacterHeal extends Character {
   }
 
   heal(amount) {
-    if (!this.friendlyTarget?.isAlive() || this.friendlyTarget.h >= 100) {
+    if (!this.ft?.iA() || this.ft.h >= 100) {
       return false;
     }
 
-    this.friendlyTarget.h = Math.min(this.friendlyTarget.h + amount, 100);
-    if (this.currentAnimation.name !== "bigHeal") {
+    this.ft.h = Math.min(this.ft.h + amount, 100);
+    if (this.currentAnimation.name !== "hh") {
       this.playAnimation("heal");
     }
 
@@ -46,36 +46,32 @@ class CharacterHeal extends Character {
   update(dt) {
     super.update(dt);
 
-    if (!this.isAlive()) {
+    if (!this.iA()) {
       return;
     }
 
-    if (this.isSelected && this.friendlyTarget) {
-      this.friendlyTarget.showOutline = true;
-    } else if (this.friendlyTarget) {
-      this.friendlyTarget.showOutline = false;
+    if (this.isSelected && this.ft) {
+      this.ft.so = true;
+    } else if (this.ft) {
+      this.ft.so = false;
     }
 
     this.autoHeal.update(dt);
     this.autoHeal.use();
 
     if (
-      ["heal", "bigHeal"].includes(this.currentAnimation.name) &&
+      ["heal", "hh"].includes(this.currentAnimation.name) &&
       this.currentAnimation.isStopped
     ) {
-      this.playAnimation("idle");
+      this.playAnimation("i");
     }
 
-    if (this.friendlyTarget && !this.friendlyTarget.isAlive()) {
-      this.playAnimation("idle");
+    if (this.ft && !this.ft.iA()) {
+      this.playAnimation("i");
     }
 
-    if (
-      this.currentAnimation.name !== "walk" &&
-      this.friendlyTarget &&
-      this.friendlyTarget.isAlive()
-    ) {
-      if (this.friendlyTarget.x < this.x) {
+    if (this.currentAnimation.name !== "walk" && this.ft && this.ft.iA()) {
+      if (this.ft.x < this.x) {
         this.scaleX = -1;
       } else {
         this.scaleX = 1;
@@ -97,7 +93,7 @@ async function initCharacterHeal() {
         loop: false,
         frameRate: 3,
       },
-      bigHeal: {
+      hh: {
         frames: [0, 1, 2, 1, 0],
         loop: false,
         frameRate: 6,
@@ -105,15 +101,11 @@ async function initCharacterHeal() {
     },
   };
 
-  const spritesheet = SpriteSheet(s);
-
-  const heal = new CharacterHeal({
+  return new CharacterHeal({
     x: 144,
     y: 112,
-    animations: spritesheet.animations,
+    animations: SpriteSheet(s).animations,
   });
-
-  return heal;
 }
 
 export { initCharacterHeal };
