@@ -2,7 +2,7 @@ import { loadImage, SpriteSheet } from "./kontra";
 
 import Projectile from "./Projectile.js";
 
-import bloodSheet from "./assets/imgs/DepzDraft02-Sheet.png";
+import bloodSheet from "./assets/imgs/e.png";
 
 class Fireball extends Projectile {
   init(props) {
@@ -17,11 +17,6 @@ class Fireball extends Projectile {
   update(dt) {
     super.update(dt);
   }
-
-  // update(dt) {
-  //   super.update(dt);
-  //   // console.log("abeek");
-  // }
 }
 
 async function initFireball() {

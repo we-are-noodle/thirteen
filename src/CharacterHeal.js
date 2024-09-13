@@ -3,7 +3,7 @@ import { loadImage, SpriteSheet } from "./kontra";
 import Character from "./Character.js";
 import Ability from "./Ability.js";
 
-import healSheet from "./assets/imgs/RobeDraft03-Sheet.png";
+import healSheet from "./assets/imgs/h.png";
 
 class CharacterHeal extends Character {
   init(props) {

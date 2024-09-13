@@ -9,7 +9,7 @@ import {
 import Character from "./Character.js";
 import Ability from "./Ability.js";
 
-import tankSheet from "./assets/imgs/GutzDraft03-Sheet.png";
+import tankSheet from "./assets/imgs/t.png";
 
 class CharacterTank extends Character {
   init(props) {

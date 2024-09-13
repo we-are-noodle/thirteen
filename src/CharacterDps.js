@@ -4,7 +4,7 @@ import Character from "./Character.js";
 import Fireball from "./Fireball.js";
 import Ability from "./Ability.js";
 
-import dpsSheet from "./assets/imgs/DepzDraft02-Sheet.png";
+import dpsSheet from "./assets/imgs/d.png";
 
 class CharacterDps extends Character {
   init(props) {

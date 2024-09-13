@@ -86,6 +86,7 @@ import { initHUD } from "./HUD.js";
 
       return c.collidesWithPointer({ x, y });
     });
+
     const enemy = enemies.find((e) => {
       if (!e.isAlive()) {
         return false;
@@ -110,8 +111,8 @@ import { initHUD } from "./HUD.js";
     }
 
     if (selected === tank) {
+      selected.showOutline = false;
       selected.target = null;
-      enemies.forEach((c) => (c.showOutline = false));
     }
 
     selected.moveTo({ x, y });
