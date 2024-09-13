@@ -23,8 +23,8 @@ class HUD extends GameObjectClass {
   }
 
   draw() {
-    this.context.fillStyle = "white";
-    this.context.font = "8px monospace";
+    this.context.fillStyle = "#fff";
+    this.context.font = "8px";
 
     this.#characters.forEach((character, i) => {
       const baseX = i * 72;

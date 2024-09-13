@@ -152,12 +152,12 @@ import { initHUD } from "./HUD.js";
       });
       const ctx = canvas.getContext("2d");
       ctx.fillStyle = "#fff";
-      ctx.font = "bold 14px monospace";
+      ctx.font = "bold 14px";
       ctx.fillText(`${level}`, canvas.width - 24, 20);
 
       if (gameOver) {
-        ctx.fillText("Game Over", 100, 100);
-        ctx.fillText("Press R to retry", 100, 120);
+        ctx.fillText("end", 100, 100);
+        ctx.fillText("R-etry", 100, 120);
       }
     },
   });
