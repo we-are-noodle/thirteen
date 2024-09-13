@@ -75,6 +75,12 @@ class CharacterDps extends Character {
     this.basicAttack.update(dt);
     this.basicAttack.use();
 
+    if (!this.target) {
+      this.target = this.enemies[randInt(0, this.enemies.length - 1)];
+      this.enemies.forEach((c) => (c.showOutline = false));
+      this.target.showOutline = true;
+    }
+
     if (
       ["attack", "ability"].includes(this.currentAnimation.name) &&
       this.currentAnimation.isStopped

@@ -105,12 +105,6 @@ class Character extends SpriteClass {
       this.target = null;
     }
 
-    if (!this.target) {
-      this.target = this.enemies[randInt(0, this.enemies.length - 1)];
-      this.enemies.forEach((c) => (c.showOutline = false));
-      this.target.showOutline = true;
-    }
-
     this.abilities.forEach((a) => a.update(dt));
 
     if (this.movingTo) {

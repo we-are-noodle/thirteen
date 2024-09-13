@@ -109,7 +109,7 @@ import { initHUD } from "./HUD.js";
 
   const loop = GameLoop({
     blur: true,
-    fps: 60,
+    fps: 40,
     update: function (dt) {
       if (characters.every((c) => !c.isAlive())) {
         gameOver = true;

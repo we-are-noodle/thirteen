@@ -15,6 +15,8 @@ class CharacterTank extends Character {
   init(props) {
     super.init(props);
 
+    this.speed = 1.1;
+
     this.addAbility(
       new Ability({
         action: () => this.taunt(),
@@ -33,11 +35,10 @@ class CharacterTank extends Character {
   }
 
   taunt() {
-    if (!this.target?.isAlive()) {
-      return false;
-    }
+    this.enemies.forEach((enemy) => {
+      enemy.target = this;
+    });
 
-    this.target.target = this;
     this.playAnimation("ability");
 
     return true;

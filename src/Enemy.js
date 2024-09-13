@@ -21,7 +21,7 @@ export default class Enemy extends SpriteClass {
 
     this.d = null;
     this.a = null;
-    this.damage = 10;
+    this.damage = 5;
     this.width = 32;
     this.height = 32;
     this.target = null;
