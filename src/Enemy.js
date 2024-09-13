@@ -32,7 +32,7 @@ export default class Enemy extends SpriteClass {
     // setting this to 1 ensures we attack immediately
     this.timeSinceLastAttack = 1;
 
-    // this.addChild(new CharacterOutline({ color: "#E54D2E" }));
+    this.co = new CharacterOutline({ parent: this, color: "#E54D2E" });
   }
 
   isAlive() {
@@ -156,6 +156,8 @@ export default class Enemy extends SpriteClass {
 
   draw() {
     super.draw();
+
+    this.co.draw();
 
     if (this.isAlive()) {
       const healthBar = new HealthBar({

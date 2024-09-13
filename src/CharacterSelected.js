@@ -19,7 +19,7 @@ export default class CharacterSelected extends SpriteClass {
       this.context.strokeStyle = "#FFE629";
       this.context.lineWidth = 2;
       this.context.beginPath();
-      this.context.ellipse(this.x + 2, this.y + 18, 6, 2, 0, 0, Math.PI);
+      this.context.ellipse(this.x + 16, this.y + 32, 6, 2, 0, 0, Math.PI);
       this.context.stroke();
     }
   }

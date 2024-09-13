@@ -22,8 +22,8 @@ class Character extends SpriteClass {
     this.speed = props.speed || 1;
     this.isSelected = false;
 
-    // this.addChild(new CharacterSelected());
-    // this.addChild(new CharacterOutline());
+    this.chl = new CharacterSelected({ parent: this });
+    this.co = new CharacterOutline({ parent: this });
 
     this.abilities = [];
     this.showOutline = false;
@@ -78,6 +78,13 @@ class Character extends SpriteClass {
 
   gainHealth(heal) {
     this.health += heal;
+  }
+
+  draw() {
+    super.draw();
+
+    this.chl.draw();
+    this.co.draw();
   }
 
   update(dt) {
