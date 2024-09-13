@@ -13,23 +13,16 @@ import tankSheet from "./assets/imgs/t.png";
 
 class CharacterTank extends Character {
   init(props) {
-    super.init({
-      ...props,
-    });
+    super.init(props);
 
     this.addAbility(
       new Ability({
-        name: "Taunt",
-        description: "Force enemies to attack you.",
         action: () => this.taunt(),
         cooldown: 3,
       }),
     );
 
     this.basicAttack = new Ability({
-      type: "melee",
-      name: "Basic Attack",
-      description: "Deal 25 damage to target.",
       action: () => this.attack(25),
       cooldown: 1,
     });
@@ -43,7 +36,6 @@ class CharacterTank extends Character {
       return false;
     }
 
-    console.log("Taunted!");
     this.target.target = this;
     this.playAnimation("ability");
 
@@ -66,7 +58,6 @@ class CharacterTank extends Character {
       return false;
     }
 
-    console.log("Attacking!");
     this.target.takeDamage(damage);
     if (this.currentAnimation.name !== "ability") {
       this.playAnimation("attack");
@@ -122,41 +113,20 @@ class CharacterTank extends Character {
 async function initCharacterTank() {
   const tankImg = await loadImage(tankSheet);
 
-  const spritesheet = SpriteSheet({
+  const s = {
+    ...Character.frameRates,
     image: tankImg,
-    frameWidth: 32,
-    frameHeight: 32,
-    spacing: 0,
-    margin: 0,
     animations: {
-      idle: {
-        frames: [4, 5],
-        frameRate: 2,
-      },
-      walk: {
-        frames: [6, 7],
-        frameRate: 6,
-      },
-      attack: {
-        frames: [2, 3],
-        loop: false,
-        frameRate: 6,
-      },
+      ...Character.frameRates.animations,
       ability: {
-        frames: [0, 1],
+        frames: [0, 1, 0],
         loop: false,
-        frameRate: 6,
-      },
-      profile: {
-        frames: [1],
-        frameRate: 1,
-      },
-      dead: {
-        frames: [8],
-        frameRate: 1,
+        frameRate: 4,
       },
     },
-  });
+  };
+
+  const spritesheet = SpriteSheet(s);
 
   const tank = new CharacterTank({
     x: 112,

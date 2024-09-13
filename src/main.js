@@ -5,7 +5,7 @@ import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
 import { initEnemySwordsman } from "./EnemySwordsman.js";
-import { initFireball } from "./Fireball.js";
+import Fireball, { initFireball } from "./Fireball.js";
 import { initHUD } from "./HUD.js";
 
 (async function () {
@@ -129,6 +129,11 @@ import { initHUD } from "./HUD.js";
       map.render();
       hud.render();
       scene.render();
+      scene.objects.forEach((o) => {
+        if (o instanceof Fireball && o.currentAnimation.isStopped) {
+          scene.remove(o);
+        }
+      });
     },
   });
 

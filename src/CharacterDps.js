@@ -8,22 +8,16 @@ import dpsSheet from "./assets/imgs/d.png";
 
 class CharacterDps extends Character {
   init(props) {
-    super.init({
-      ...props,
-    });
+    super.init(props);
 
     this.addAbility(
       new Ability({
-        name: "Attack",
-        description: "Deal 10-12 damage to target.",
         action: (m) => this.fireball(m),
         cooldown: 1,
       }),
     );
 
     this.basicAttack = new Ability({
-      name: "Basic Attack",
-      description: "Deal 25 damage to target.",
       action: () => this.attack(25),
       cooldown: 2,
     });
@@ -37,10 +31,7 @@ class CharacterDps extends Character {
       return false;
     }
 
-    console.log("Send fireball!");
-    this.playAnimation("fireball");
-    // instantiate new fireball
-    // note that it will need to get rendered.
+    this.playAnimation("ability");
 
     const f = new Fireball({
       x: this.x,
@@ -66,9 +57,8 @@ class CharacterDps extends Character {
       return false;
     }
 
-    console.log("Attacking!");
     this.target.takeDamage(damage);
-    if (this.currentAnimation.name !== "fireball") {
+    if (this.currentAnimation.name !== "ability") {
       this.playAnimation("attack");
     }
 
@@ -86,7 +76,7 @@ class CharacterDps extends Character {
     this.basicAttack.use();
 
     if (
-      ["attack", "fireball"].includes(this.currentAnimation.name) &&
+      ["attack", "ability"].includes(this.currentAnimation.name) &&
       this.currentAnimation.isStopped
     ) {
       this.playAnimation("idle");
@@ -109,11 +99,12 @@ class CharacterDps extends Character {
 async function initCharacterDps() {
   const dpsImg = await loadImage(dpsSheet);
 
-  console.log(this.Character);
+  const s = {
+    ...Character.frameRates,
+    image: dpsImg,
+  };
 
-  this.Character.frameRates.image = dpsImg;
-
-  const spritesheet = SpriteSheet(this.Character.frameRates);
+  const spritesheet = SpriteSheet(s);
 
   const dps = new CharacterDps({
     x: 80,
