@@ -9,10 +9,11 @@ class Character extends SpriteClass {
       ...props,
     });
 
-    this.maxHealth = 100;
-    this.health = this.maxHealth;
-    this.dexterity = null;
-    this.armor = null;
+    // mh = maxHealth, h = health, d = dexterity, a = armor
+    this.mh = 100;
+    this.h = this.mh;
+    this.d = null;
+    this.a = null;
     this.width = 32;
     this.height = 32;
     this.anchor = { x: 0.5, y: 0.5 };
@@ -51,14 +52,14 @@ class Character extends SpriteClass {
   }
 
   dodgeAttack() {
-    if (randInt(1, 100) <= this.dexterity) {
+    if (randInt(1, 100) <= this.d) {
       return true;
     }
     return false;
   }
 
   blockAttack() {
-    if (randInt(1, 100) <= this.armor) {
+    if (randInt(1, 100) <= this.a) {
       return true;
     }
     return false;

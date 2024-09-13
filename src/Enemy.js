@@ -16,10 +16,10 @@ export default class Enemy extends SpriteClass {
       anchor: { x: 0.5, y: 0.5 },
     });
 
-    this.maxHealth = 100;
-    this.health = this.maxHealth;
+    this.mh = 100;
+    this.h = this.mh;
 
-    this.dexterity = null;
+    this.d = null;
     this.armor = null;
     this.damage = 15;
     this.probability = 10;
@@ -36,18 +36,18 @@ export default class Enemy extends SpriteClass {
   }
 
   isAlive() {
-    return this.health > 0;
+    return this.h > 0;
   }
 
   dodgeAttack() {
-    if (randInt(1, 100) <= this.dexterity) {
+    if (randInt(1, 100) <= this.d) {
       return true;
     }
     return false;
   }
 
   blockAttack() {
-    if (randInt(1, 100) <= this.armor) {
+    if (randInt(1, 100) <= this.a) {
       return true;
     }
     return false;
@@ -57,7 +57,7 @@ export default class Enemy extends SpriteClass {
     if (this.blockAttack() || this.dodgeAttack()) {
       return;
     }
-    this.health -= damage;
+    this.h -= damage;
   }
 
   basicAttack(damage) {

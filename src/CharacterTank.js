@@ -28,8 +28,8 @@ class CharacterTank extends Character {
       cooldown: 1,
     });
 
-    this.armor = 5;
-    this.dexterity = 5;
+    this.a = 5;
+    this.d = 5;
   }
 
   taunt() {
@@ -49,8 +49,8 @@ class CharacterTank extends Character {
     const thisCollisionTarget = {
       x: this.x - 8,
       y: this.y - 8,
-      width: 8,
-      height: 8,
+      w: 8,
+      h: 8,
     };
     if (
       !this.target?.isAlive() ||
@@ -92,8 +92,8 @@ class CharacterTank extends Character {
       const thisCollisionTarget = {
         x: this.x - 8,
         y: this.y - 8,
-        width: 8,
-        height: 8,
+        w: 8,
+        h: 8,
       };
       if (this.target.x < this.x) {
         this.scaleX = -1;

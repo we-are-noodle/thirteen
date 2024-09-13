@@ -10,8 +10,8 @@ class EnemySwordsman extends Enemy {
       ...props,
     });
 
-    this.armor = 10;
-    this.dexterity = 10;
+    this.a = 10;
+    this.d = 10;
   }
 }
 

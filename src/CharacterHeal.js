@@ -26,8 +26,8 @@ class CharacterHeal extends Character {
       cooldown: 1,
     });
 
-    this.armor = 10;
-    this.dexterity = 10;
+    this.a = 10;
+    this.d = 10;
   }
 
   heal(amount) {
