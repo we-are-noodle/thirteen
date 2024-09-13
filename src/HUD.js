@@ -30,12 +30,14 @@ class HUD extends GameObjectClass {
       const baseX = i * 72;
       const baseY = 4;
       const hl = Sprite({
-        x: baseX + 4,
+        x: baseX,
         y: baseY,
         width: 34,
         height: 34,
         color: character.isSelected ? "#FFE629" : "black",
       });
+      hl.render();
+
       const bg = Sprite({
         x: baseX + 1,
         y: baseY + 1,
@@ -72,17 +74,16 @@ class HUD extends GameObjectClass {
         );
 
         const cooldownBar = Sprite({
-          x: baseX,
-          y: baseY + 20,
+          x: baseX + 36,
+          y: baseY + 24,
           width,
           height: 4,
           color: "white",
         });
         cooldownBar.render();
+
         abilityIcons.push(abilityIcon);
       });
-
-      hl.render();
 
       const { x: profileX, y: profileY } = hl.world;
 

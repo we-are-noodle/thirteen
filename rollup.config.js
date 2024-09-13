@@ -16,7 +16,7 @@ export default [
         gameObject: {
           anchor: true,
           // group: true,
-          // scale: true,
+          scale: true,
         },
         sprite: {
           animation: true,
