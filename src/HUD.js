@@ -27,42 +27,43 @@ class HUD extends GameObjectClass {
     this.context.font = "8px monospace";
 
     this.#characters.forEach((character, i) => {
+      const baseX = i * 72;
+      const baseY = 4;
       const hl = Sprite({
-        x: i * 72 + 4,
-        y: 4,
+        x: baseX + 4,
+        y: baseY,
         width: 34,
         height: 34,
         color: character.isSelected ? "#FFE629" : "black",
       });
       const bg = Sprite({
-        x: 1,
-        y: 1,
+        x: baseX + 1,
+        y: baseY + 1,
         width: 32,
         height: 32,
         color: "black",
       });
-      hl.addChild(bg);
+      bg.render();
 
-      hl.addChild(
-        new HealthBar({
-          combatant: character,
-          maxWidth: 30,
-          height: 4,
-          x: 2,
-          y: 28,
-        }),
-      );
+      const hb = new HealthBar({
+        combatant: character,
+        maxWidth: 30,
+        height: 4,
+        x: baseX + 2,
+        y: baseY + 28,
+      });
+      hb.render();
 
       const abilityIcons = [];
       character.abilities?.forEach((ability) => {
         const abilityIcon = Sprite({
-          x: 36,
-          y: 0,
+          x: baseX + 36,
+          y: baseY + 4,
           width: 24,
           height: 24,
           color: ability.isReady() ? "black" : `rgba(0,0,0,.7)`,
         });
-        hl.addChild(abilityIcon);
+        abilityIcon.render();
 
         const maxWidth = 24;
         const width = Math.max(
@@ -71,13 +72,13 @@ class HUD extends GameObjectClass {
         );
 
         const cooldownBar = Sprite({
-          x: 0,
-          y: 20,
+          x: baseX,
+          y: baseY + 20,
           width,
           height: 4,
           color: "white",
         });
-        abilityIcon.addChild(cooldownBar);
+        cooldownBar.render();
         abilityIcons.push(abilityIcon);
       });
 

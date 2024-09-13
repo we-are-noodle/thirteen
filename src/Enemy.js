@@ -32,7 +32,7 @@ export default class Enemy extends SpriteClass {
     // setting this to 1 ensures we attack immediately
     this.timeSinceLastAttack = 1;
 
-    this.addChild(new CharacterOutline({ color: "#E54D2E" }));
+    // this.addChild(new CharacterOutline({ color: "#E54D2E" }));
   }
 
   isAlive() {
@@ -78,7 +78,7 @@ export default class Enemy extends SpriteClass {
       this.amplification,
       this.basicAttack(this.damage),
     );
-    this.target.takeDamage(damage);
+    this.target.takeDamage(this, damage);
     if (this.currentAnimation.name !== "attack") {
       this.playAnimation("attack");
     }

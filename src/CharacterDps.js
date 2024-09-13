@@ -45,7 +45,7 @@ class CharacterDps extends Character {
         this.target.takeDamage(dmg);
       },
     });
-    m.add(f);
+    m.push(f);
 
     return true;
   }

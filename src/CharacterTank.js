@@ -23,6 +23,7 @@ class CharacterTank extends Character {
     );
 
     this.basicAttack = new Ability({
+      type: "melee",
       action: () => this.attack(25),
       cooldown: 1,
     });
@@ -94,12 +95,12 @@ class CharacterTank extends Character {
         width: 8,
         height: 8,
       };
+      if (this.target.x < this.x) {
+        this.scaleX = -1;
+      } else {
+        this.scaleX = 1;
+      }
       if (!collides(thisCollisionTarget, this.target)) {
-        if (this.target.x < this.x) {
-          this.scaleX = -1;
-        } else {
-          this.scaleX = 1;
-        }
         const ang = angleToTarget(this, this.target);
         const { x, y } = movePoint(this, ang, this.speed);
         this.x = x;

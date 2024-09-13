@@ -22,8 +22,8 @@ class Character extends SpriteClass {
     this.speed = props.speed || 1;
     this.isSelected = false;
 
-    this.addChild(new CharacterSelected());
-    this.addChild(new CharacterOutline());
+    // this.addChild(new CharacterSelected());
+    // this.addChild(new CharacterOutline());
 
     this.abilities = [];
     this.showOutline = false;
@@ -64,7 +64,12 @@ class Character extends SpriteClass {
     return false;
   }
 
-  takeDamage(damage) {
+  takeDamage(enemy, damage) {
+    if (this.isAlive() && !this.target) {
+      this.target = enemy;
+      enemy.showOutline = true;
+    }
+
     if (this.blockAttack() || this.dodgeAttack()) {
       return;
     }
@@ -81,6 +86,11 @@ class Character extends SpriteClass {
     if (!this.isAlive()) {
       this.playAnimation("dead");
       return;
+    }
+
+    if (this.target && !this.target.isAlive()) {
+      this.target.showOutline = false;
+      this.target = null;
     }
 
     this.abilities.forEach((a) => a.update(dt));

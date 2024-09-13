@@ -15,8 +15,8 @@ export default [
       kontra({
         gameObject: {
           anchor: true,
-          group: true,
-          scale: true,
+          // group: true,
+          // scale: true,
         },
         sprite: {
           animation: true,

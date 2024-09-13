@@ -1,4 +1,4 @@
-import { depthSort, init, initInput, onKey, GameLoop, Scene } from "./kontra";
+import { depthSort, init, initInput, onKey, GameLoop } from "./kontra";
 
 import { initMap } from "./Map.js";
 import { initCharacterDps } from "./CharacterDps.js";
@@ -30,14 +30,10 @@ import { initHUD } from "./HUD.js";
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
 
-  // set some default targets
   enemies.forEach((enemy) => {
     enemy.characters = characters;
   });
-  tank.target = enemies[0];
-  dps.target = enemies[0];
 
-  heal.target = enemies[0];
   heal.friendlyTarget = tank;
 
   let selected;
@@ -52,27 +48,12 @@ import { initHUD } from "./HUD.js";
   };
   selectCharacter(0)();
 
-  const scene = Scene({
-    id: "main",
-    objects: [...characters, ...enemies],
-    sortFunction: (obj1, obj2, prop = "y") => {
-      const order = depthSort(obj1, obj2, prop);
-      if (obj1.isAlive && obj2.isAlive) {
-        if (obj1.isAlive() && !obj2.isAlive()) {
-          return 1;
-        } else if (!obj1.isAlive() && obj2.isAlive()) {
-          return -1;
-        }
-      }
-
-      return order;
-    },
-  });
+  const objects = [...characters, ...enemies];
 
   onKey("1", selectCharacter(0));
   onKey("2", selectCharacter(1));
   onKey("3", selectCharacter(2));
-  onKey("q", () => selected.abilities[0].use(scene));
+  onKey("q", () => selected.abilities[0].use(objects));
 
   map.handleMapClick(({ x, y, outOfBounds }) => {
     if (outOfBounds) {
@@ -123,16 +104,28 @@ import { initHUD } from "./HUD.js";
     fps: 60,
     update: function (dt) {
       hud.update();
-      scene.update(dt);
+      objects.sort((obj1, obj2) => {
+        const order = depthSort(obj1, obj2, "y");
+        if (obj1.isAlive && obj2.isAlive) {
+          if (obj1.isAlive() && !obj2.isAlive()) {
+            return 1;
+          } else if (!obj1.isAlive() && obj2.isAlive()) {
+            return -1;
+          }
+        }
+
+        return order;
+      });
+      objects.forEach((o) => o.update(dt));
     },
     render: function () {
       map.render();
       hud.render();
-      scene.render();
-      scene.objects.forEach((o) => {
+      objects.forEach((o) => {
         if (o instanceof Fireball && o.currentAnimation.isStopped) {
-          scene.remove(o);
+          objects.splice(objects.indexOf(o), 1);
         }
+        o.render();
       });
     },
   });
