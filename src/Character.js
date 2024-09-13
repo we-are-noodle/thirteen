@@ -67,7 +67,10 @@ class Character extends SpriteClass {
   takeDamage(enemy, damage) {
     if (this.isAlive() && !this.target) {
       this.target = enemy;
-      enemy.showOutline = true;
+      if (this.isSelected) {
+        this.enemies.forEach((c) => (c.showOutline = false));
+        enemy.showOutline = true;
+      }
     }
 
     if (this.blockAttack() || this.dodgeAttack()) {

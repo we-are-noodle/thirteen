@@ -10,7 +10,8 @@ class Map {
   }
 
   isOutOfBounds({ y }) {
-    if (y <= 50) {
+    console.log("y", y);
+    if (y <= 50 || y >= 192) {
       return true;
     }
 

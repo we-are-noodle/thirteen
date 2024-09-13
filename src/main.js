@@ -33,6 +33,7 @@ import { initHUD } from "./HUD.js";
   enemies.forEach((enemy) => {
     enemy.characters = characters;
   });
+  characters.forEach((character) => (character.enemies = enemies));
 
   heal.friendlyTarget = tank;
 
