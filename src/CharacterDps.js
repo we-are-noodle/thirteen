@@ -109,41 +109,11 @@ class CharacterDps extends Character {
 async function initCharacterDps() {
   const dpsImg = await loadImage(dpsSheet);
 
-  const spritesheet = SpriteSheet({
-    image: dpsImg,
-    frameWidth: 32,
-    frameHeight: 32,
-    spacing: 0,
-    margin: 0,
-    animations: {
-      idle: {
-        frames: [4, 5],
-        frameRate: 2,
-      },
-      walk: {
-        frames: [6, 7],
-        frameRate: 6,
-      },
-      attack: {
-        frames: [2, 3],
-        loop: false,
-        frameRate: 6,
-      },
-      fireball: {
-        frames: [0, 1],
-        loop: false,
-        frameRate: 6,
-      },
-      profile: {
-        frames: [1],
-        frameRate: 1,
-      },
-      dead: {
-        frames: [8],
-        frameRate: 1,
-      },
-    },
-  });
+  console.log(this.Character);
+
+  this.Character.frameRates.image = dpsImg;
+
+  const spritesheet = SpriteSheet(this.Character.frameRates);
 
   const dps = new CharacterDps({
     x: 80,

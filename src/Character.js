@@ -3,7 +3,7 @@ import { angleToTarget, movePoint, randInt, SpriteClass } from "./kontra";
 import CharacterSelected from "./CharacterSelected";
 import CharacterOutline from "./CharacterOutline";
 
-export default class Character extends SpriteClass {
+class Character extends SpriteClass {
   init(props) {
     super.init({
       ...props,
@@ -21,6 +21,42 @@ export default class Character extends SpriteClass {
     this.friendlyTarget = null;
     this.speed = props.speed || 1;
     this.isSelected = false;
+
+    this.frameRates = {
+        image: null,
+        frameWidth: 32,
+        frameHeight: 32,
+        spacing: 0,
+        margin: 0,
+        animations: {
+          idle: {
+            frames: [4, 5],
+            frameRate: 2,
+          },
+          walk: {
+            frames: [6, 7],
+            frameRate: 6,
+          },
+          attack: {
+            frames: [2, 3],
+            loop: false,
+            frameRate: 6,
+          },
+          fireball: {
+            frames: [0, 1],
+            loop: false,
+            frameRate: 6,
+          },
+          profile: {
+            frames: [1],
+            frameRate: 1,
+          },
+          dead: {
+            frames: [8],
+            frameRate: 1,
+          },
+        },
+      };
 
     this.addChild(new CharacterSelected());
     this.addChild(new CharacterOutline());
@@ -117,3 +153,5 @@ export default class Character extends SpriteClass {
     }
   }
 }
+
+export default Character;

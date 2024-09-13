@@ -22,25 +22,7 @@ class Fireball extends Projectile {
 async function initFireball() {
   const bloodImg = await loadImage(bloodSheet);
 
-  const spritesheet = SpriteSheet({
-    image: bloodImg,
-    frameWidth: 25,
-    frameHeight: 25,
-    spacing: 0,
-    margin: 0,
-    animations: {
-      seek: {
-        frames: "0..4",
-        frameRate: 30,
-        loop: true,
-      },
-      explode: {
-        frames: "0..29",
-        frameRate: 30,
-        loop: false,
-      },
-    },
-  });
+  const spritesheet = SpriteSheet(this.frameRates);
 
   // We will have to spawn the fireball at the location of the caster.
   Fireball.spritesheet = spritesheet;
