@@ -48,7 +48,7 @@ class Character extends SpriteClass {
   }
 
   isAlive() {
-    return this.health > 0;
+    return this.h > 0;
   }
 
   dodgeAttack() {
@@ -77,11 +77,12 @@ class Character extends SpriteClass {
     if (this.blockAttack() || this.dodgeAttack()) {
       return;
     }
-    this.health -= damage;
+
+    this.h -= damage;
   }
 
   gainHealth(heal) {
-    this.health += heal;
+    this.h += heal;
   }
 
   draw() {
@@ -102,6 +103,12 @@ class Character extends SpriteClass {
     if (this.target && !this.target.isAlive()) {
       this.target.showOutline = false;
       this.target = null;
+    }
+
+    if (!this.target) {
+      this.target = this.enemies[randInt(0, this.enemies.length - 1)];
+      this.enemies.forEach((c) => (c.showOutline = false));
+      this.target.showOutline = true;
     }
 
     this.abilities.forEach((a) => a.update(dt));

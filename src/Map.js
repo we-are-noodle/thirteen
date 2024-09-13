@@ -17,11 +17,11 @@ class Map {
       margin: 0,
       animations: {
         grass: {
-          frames: 0
+          frames: 0,
         },
         wall: {
-          frames: 1
-        }
+          frames: 1,
+        },
       },
       image: mapImage,
     };
@@ -34,8 +34,8 @@ class Map {
         const sprite = new Sprite({
           x: x * 16,
           y: y * 16,
-          animations: spritesheet.animations
-        })
+          animations: spritesheet.animations,
+        });
         if (y < 3 || y > 11) {
           sprite.playAnimation("wall");
         }
@@ -45,8 +45,7 @@ class Map {
   }
 
   isOutOfBounds({ y }) {
-    console.log("y", y);
-    if (y <= 50 || y >= 192) {
+    if (y <= 50 || y >= 180) {
       return true;
     }
 

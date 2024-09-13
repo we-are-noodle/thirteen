@@ -1,4 +1,4 @@
-import { depthSort, init, initInput, onKey, GameLoop } from "./kontra";
+import { depthSort, init, initInput, onKey, GameLoop, randInt } from "./kontra";
 
 import { initMap } from "./Map.js";
 import { initCharacterDps } from "./CharacterDps.js";
@@ -17,7 +17,7 @@ import { initHUD } from "./HUD.js";
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, dps, heal, tank, hud, enemies] = await Promise.all([
+  const [map, dps, heal, tank, hud, spawner] = await Promise.all([
     initMap(canvas),
     initCharacterDps(),
     initCharacterHeal(),
@@ -30,6 +30,7 @@ import { initHUD } from "./HUD.js";
   const characters = [dps, tank, heal];
   hud.setCharacters(...characters);
 
+  const enemies = spawner(1);
   enemies.forEach((enemy) => {
     enemy.characters = characters;
   });
@@ -55,6 +56,9 @@ import { initHUD } from "./HUD.js";
   onKey("2", selectCharacter(1));
   onKey("3", selectCharacter(2));
   onKey("q", () => selected.abilities[0].use(objects));
+  onKey("r", () => {
+    window.location.reload();
+  });
 
   map.handleMapClick(({ x, y, outOfBounds }) => {
     if (outOfBounds) {
@@ -100,11 +104,29 @@ import { initHUD } from "./HUD.js";
     selected.moveTo({ x, y });
   });
 
+  let level = 1;
+  let gameOver = false;
+
   const loop = GameLoop({
     blur: true,
     fps: 60,
     update: function (dt) {
+      if (characters.every((c) => !c.isAlive())) {
+        gameOver = true;
+        return;
+      }
+
       hud.update();
+      if (enemies.every((e) => !e.isAlive())) {
+        level += 1;
+        const newEnemies = spawner(Math.min(level, 13));
+        newEnemies.forEach((enemy) => {
+          enemy.characters = characters;
+        });
+        characters.forEach((character) => (character.enemies = newEnemies));
+        objects.push(...newEnemies);
+        enemies.push(...newEnemies);
+      }
       objects.sort((obj1, obj2) => {
         const order = depthSort(obj1, obj2, "y");
         if (obj1.isAlive && obj2.isAlive) {
@@ -128,6 +150,15 @@ import { initHUD } from "./HUD.js";
         }
         o.render();
       });
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold 14px monospace";
+      ctx.fillText(`${level}`, canvas.width - 24, 20);
+
+      if (gameOver) {
+        ctx.fillText("Game Over", 100, 100);
+        ctx.fillText("Press R to restart", 100, 120);
+      }
     },
   });
 

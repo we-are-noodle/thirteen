@@ -31,14 +31,11 @@ class CharacterHeal extends Character {
   }
 
   heal(amount) {
-    if (!this.friendlyTarget?.isAlive() || this.friendlyTarget.health >= 100) {
+    if (!this.friendlyTarget?.isAlive() || this.friendlyTarget.h >= 100) {
       return false;
     }
 
-    this.friendlyTarget.health = Math.min(
-      this.friendlyTarget.health + amount,
-      100,
-    );
+    this.friendlyTarget.h = Math.min(this.friendlyTarget.h + amount, 100);
     if (this.currentAnimation.name !== "bigHeal") {
       this.playAnimation("heal");
     }

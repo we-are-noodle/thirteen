@@ -49,8 +49,8 @@ class CharacterTank extends Character {
     const thisCollisionTarget = {
       x: this.x - 8,
       y: this.y - 8,
-      w: 8,
-      h: 8,
+      width: 8,
+      height: 8,
     };
     if (
       !this.target?.isAlive() ||
@@ -92,8 +92,8 @@ class CharacterTank extends Character {
       const thisCollisionTarget = {
         x: this.x - 8,
         y: this.y - 8,
-        w: 8,
-        h: 8,
+        width: 8,
+        height: 8,
       };
       if (this.target.x < this.x) {
         this.scaleX = -1;

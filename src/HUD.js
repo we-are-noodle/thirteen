@@ -9,8 +9,8 @@ class HUD extends GameObjectClass {
     this.#characters = characters;
     this.#profiles = characters.map((character) => {
       const profile = Sprite({
-        width: 16,
-        height: 16,
+        width: 32,
+        height: 32,
         animations: character.animations,
       });
       profile.playAnimation("profile");
@@ -87,8 +87,8 @@ class HUD extends GameObjectClass {
 
       const { x: profileX, y: profileY } = hl.world;
 
-      this.#profiles[i].x = profileX + 9;
-      this.#profiles[i].y = profileY + 9;
+      this.#profiles[i].x = profileX;
+      this.#profiles[i].y = profileY;
       this.#profiles[i].render();
 
       this.context.font = "8px monospace";
