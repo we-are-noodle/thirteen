@@ -52,32 +52,22 @@ export default class Character extends SpriteClass {
 
   dodgeAttack() {
     if (randInt(1, 100) <= this.dexterity) {
-      console.log("Character dodged attack!");
       return true;
     }
-    console.log(this.dexterity);
     return false;
-    // when we want to remove console logs, we can refactor to the following:
-    // return randInt(1,100) <= this.dexterity ? true : false;
   }
 
   blockAttack() {
     if (randInt(1, 100) <= this.armor) {
-      console.log("Character blocked attack!");
       return true;
     }
-    console.log(this.armor);
     return false;
-    // when we want to remove console logs, we can refactor to the following:
-    // return randInt(1,100) <= this.armor ? true : false;
   }
 
   takeDamage(damage) {
-    // do we want the percentages to aggregate like below?
     if (this.blockAttack() || this.dodgeAttack()) {
       return;
     }
-    console.log(`Character took ${damage} damage.`);
     this.health -= damage;
   }
 
@@ -93,10 +83,8 @@ export default class Character extends SpriteClass {
       return;
     }
 
-    // abilities need delta time to properly track cooldowns
     this.abilities.forEach((a) => a.update(dt));
 
-    //target
     if (this.movingTo) {
       const distance = Math.hypot(
         this.movingTo.x - this.x,

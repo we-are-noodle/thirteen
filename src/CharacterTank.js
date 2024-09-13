@@ -45,7 +45,7 @@ class CharacterTank extends Character {
 
     console.log("Taunted!");
     this.target.target = this;
-    this.playAnimation("taunt");
+    this.playAnimation("ability");
 
     return true;
   }
@@ -68,7 +68,7 @@ class CharacterTank extends Character {
 
     console.log("Attacking!");
     this.target.takeDamage(damage);
-    if (this.currentAnimation.name !== "taunt") {
+    if (this.currentAnimation.name !== "ability") {
       this.playAnimation("attack");
     }
 
@@ -86,7 +86,7 @@ class CharacterTank extends Character {
     this.basicAttack.use();
 
     if (
-      ["attack", "taunt"].includes(this.currentAnimation.name) &&
+      ["attack", "ability"].includes(this.currentAnimation.name) &&
       this.currentAnimation.isStopped
     ) {
       this.playAnimation("idle");
@@ -130,29 +130,30 @@ async function initCharacterTank() {
     margin: 0,
     animations: {
       idle: {
-        frames: [0, 8, 16, 24, 32, 40, 48, 56],
-        frameRate: 8,
+        frames: [4, 5],
+        frameRate: 2,
       },
       walk: {
-        frames: [2, 10, 18, 26, 34, 42, 50, 58],
-        frameRate: 5,
+        frames: [6, 7],
+        frameRate: 6,
       },
       attack: {
-        frames: [5, 13, 21, 29, 37, 45, 53, 61],
-        frameRate: 10,
+        frames: [2, 3],
+        loop: false,
+        frameRate: 6,
+      },
+      ability: {
+        frames: [0, 1],
+        loop: false,
+        frameRate: 6,
       },
       profile: {
         frames: [1],
         frameRate: 1,
       },
       dead: {
-        frames: [45],
+        frames: [8],
         frameRate: 1,
-      },
-      taunt: {
-        frames: [7, 15, 23, 31, 39, 47, 55, 63],
-        frameRate: 10,
-        loop: false,
       },
     },
   });

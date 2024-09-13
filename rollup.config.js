@@ -21,10 +21,6 @@ export default {
         animation: true,
         image: true,
       },
-      tileEngine: {
-        query: true,
-        tiled: true,
-      },
     }),
     terser(),
   ],

@@ -45,6 +45,7 @@ class CharacterHeal extends Character {
       100,
     );
     if (this.currentAnimation.name !== "bigHeal") {
+      console.log("heal");
       this.playAnimation("heal");
     }
 
@@ -103,28 +104,29 @@ async function initCharacterHeal() {
     margin: 0,
     animations: {
       idle: {
-        frames: [0, 8, 16, 24, 32, 40, 48, 56],
-        frameRate: 8,
+        frames: [4, 5],
+        frameRate: 4,
       },
       walk: {
-        frames: [2, 10, 18, 26, 34, 42, 50, 58],
-        frameRate: 5,
+        frames: [6, 7],
+        frameRate: 6,
       },
       heal: {
-        frames: [5, 13, 21, 29, 37, 45, 53, 61],
-        frameRate: 10,
+        frames: [2, 3],
+        loop: false,
+        frameRate: 3,
       },
       bigHeal: {
-        frames: [7, 15, 23, 31, 39, 47, 55, 63],
-        frameRate: 10,
+        frames: [0, 1, 2, 1, 0],
         loop: false,
+        frameRate: 6,
       },
       profile: {
         frames: [1],
         frameRate: 1,
       },
       dead: {
-        frames: [35],
+        frames: [8],
         frameRate: 1,
       },
     },

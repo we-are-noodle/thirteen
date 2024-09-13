@@ -2,7 +2,7 @@ import { loadImage, SpriteSheet } from "./kontra";
 
 import Enemy from "./Enemy.js";
 
-import skeletonSheet from "./assets/imgs/Skeleton-Soldier.png";
+import skeletonSheet from "./assets/imgs/Skeleton-Soldier-Sheet.png";
 
 class EnemySwordsman extends Enemy {
   init(props) {
@@ -20,25 +20,25 @@ async function initEnemySwordsman() {
 
   const spritesheet = SpriteSheet({
     image: skeletonImg,
-    frameWidth: 16,
-    frameHeight: 16,
+    frameWidth: 32,
+    frameHeight: 32,
     spacing: 0,
     margin: 0,
     animations: {
       idle: {
-        frames: [40, 41],
+        frames: [3, 4],
         frameRate: 2,
       },
       walk: {
-        frames: "0..4",
+        frames: [3, 4],
         frameRate: 5,
       },
       attack: {
-        frames: "20..23",
+        frames: [3, 4, 1, 2],
         frameRate: 10,
       },
       dead: {
-        frames: [45],
+        frames: [0],
         frameRate: 1,
       },
     },

@@ -2,7 +2,7 @@ import { loadImage, SpriteSheet } from "./kontra";
 
 import Projectile from "./Projectile.js";
 
-import bloodSheet from "./assets/imgs/blood.png";
+import bloodSheet from "./assets/imgs/DepzDraft02-Sheet.png";
 
 class Fireball extends Projectile {
   init(props) {

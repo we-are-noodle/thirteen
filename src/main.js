@@ -1,7 +1,6 @@
 import { depthSort, init, initInput, onKey, GameLoop, Scene } from "./kontra";
 
 import { initMap } from "./Map.js";
-import { initBloodEffects } from "./BloodEffects.js";
 import { initCharacterDps } from "./CharacterDps.js";
 import { initCharacterHeal } from "./CharacterHeal.js";
 import { initCharacterTank } from "./CharacterTank.js";
@@ -13,12 +12,13 @@ import { initHUD } from "./HUD.js";
   init();
   initInput();
 
+  const canvas = document.getElementById("game");
+
   // disable right click context menu
   document.addEventListener("contextmenu", (event) => event.preventDefault());
 
-  const [map, bloodEffects, dps, heal, tank, hud, enemies] = await Promise.all([
-    initMap(),
-    initBloodEffects(),
+  const [map, dps, heal, tank, hud, enemies] = await Promise.all([
+    initMap(canvas),
     initCharacterDps(),
     initCharacterHeal(),
     initCharacterTank(),
@@ -55,7 +55,18 @@ import { initHUD } from "./HUD.js";
   const scene = Scene({
     id: "main",
     objects: [...characters, ...enemies],
-    sortFunction: depthSort,
+    sortFunction: (obj1, obj2, prop = "y") => {
+      const order = depthSort(obj1, obj2, prop);
+      if (obj1.isAlive && obj2.isAlive) {
+        if (obj1.isAlive() && !obj2.isAlive()) {
+          return 1;
+        } else if (!obj1.isAlive() && obj2.isAlive()) {
+          return -1;
+        }
+      }
+
+      return order;
+    },
   });
 
   onKey("1", selectCharacter(0));
@@ -63,18 +74,25 @@ import { initHUD } from "./HUD.js";
   onKey("3", selectCharacter(2));
   onKey("q", () => selected.abilities[0].use(scene));
 
-  const effects = Scene({
-    id: "effects",
-    objects: [],
-  });
-
   map.handleMapClick(({ x, y, outOfBounds }) => {
     if (outOfBounds) {
       return;
     }
 
-    const character = characters.find((c) => c.collidesWithPointer({ x, y }));
-    const enemy = enemies.find((e) => e.collidesWithPointer({ x, y }));
+    const character = characters.find((c) => {
+      if (!c.isAlive()) {
+        return false;
+      }
+
+      return c.collidesWithPointer({ x, y });
+    });
+    const enemy = enemies.find((e) => {
+      if (!e.isAlive()) {
+        return false;
+      }
+
+      return e.collidesWithPointer({ x, y });
+    });
 
     if (selected === heal && character) {
       characters.forEach((c) => (c.showOutline = false));
@@ -97,8 +115,6 @@ import { initHUD } from "./HUD.js";
     }
 
     selected.moveTo({ x, y });
-
-    effects.add(bloodEffects.createBloodEffect({ x, y }));
   });
 
   const loop = GameLoop({
@@ -106,25 +122,10 @@ import { initHUD } from "./HUD.js";
     fps: 60,
     update: function (dt) {
       hud.update();
-      effects.update(dt);
-      effects.objects.forEach((effect) => {
-        if (effect.isAlive()) {
-          return;
-        }
-
-        effects.remove(effect);
-      });
       scene.update(dt);
-      scene.objects.forEach((o) => {
-        if (o.isAlive()) {
-          return;
-        }
-        scene.remove(o);
-      });
     },
     render: function () {
       map.render();
-      effects.render();
       hud.render();
       scene.render();
     },
